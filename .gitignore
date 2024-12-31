@@ -1,0 +1,7 @@
+.settings
+Debug/
+.cproject
+.project
+build/
+build_debug/
+build_release/
