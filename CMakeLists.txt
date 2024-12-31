@@ -16,6 +16,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #Unit tests
 include(CTest)
 add_subdirectory(test/unit_test/unity unity)
+add_subdirectory(test/unit_test/events)
+add_subdirectory(test/unit_test/weather_control)
+add_subdirectory(test/unit_test/sys_comm)
 
 #Source files
 add_subdirectory(src)
