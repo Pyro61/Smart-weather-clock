@@ -5,7 +5,7 @@ include(../cmake/compiler_flags.cmake)
 set(INCLUDE_DIRS
     #Drivers
     Drivers/CMSIS/Include
-    Drivers/CMSIS/Device/ST/STM32G400/Include
+    Drivers/CMSIS/Device/ST/STM32G4xx/Include
 )
 
 set(C_SRCS
@@ -20,8 +20,8 @@ set(C_SRCS
     #External hw files
     
 
-    #MPU hw files
-    
+    #MCU hw files
+    hw/mcu_hw/core_clock/core_clock.c
 )
 
 set(ASM_SRCS
