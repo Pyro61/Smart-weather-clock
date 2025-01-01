@@ -34,6 +34,7 @@ set(C_SRCS
     hw/mcu_hw/mcu_hw_init.c
     hw/mcu_hw/fpu/fpu.c
     hw/mcu_hw/core_clock/core_clock.c
+    hw/mcu_hw/gpio/gpio.c
 )
 
 set(ASM_SRCS
