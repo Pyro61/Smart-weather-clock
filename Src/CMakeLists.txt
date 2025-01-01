@@ -21,6 +21,7 @@ set(C_SRCS
     
 
     #MCU hw files
+    hw/mcu_hw/mcu_hw_init.c
     hw/mcu_hw/core_clock/core_clock.c
 )
 
