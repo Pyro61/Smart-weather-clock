@@ -18,7 +18,7 @@ set(C_SRCS
     
 
     #External hw files
-    
+    hw/external_hw/LPS25HB/LPS25HB.c
 
     #MCU hw files
     hw/mcu_hw/mcu_hw_init.c
