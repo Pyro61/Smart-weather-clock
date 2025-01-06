@@ -15,7 +15,17 @@ set(C_SRCS
     Core/Src/sysmem.c
 
     #Application logic files
-    
+    app_control/control.c
+    events/events.c
+    safe_state/safe_state.c
+    sys_comm/sys_comm.c
+    sys_comm/sys_comm_send_recv.c
+    sys_comm/adapter_sys_comm.c
+    weather_control/weather_sensors_control.c
+    weather_meas_state_machine/state_machine.c
+    weather_meas_state_machine/state_run/state_run.c
+    weather_meas_state_machine/state_sleep/state_sleep.c
+    logic_init.c
 
     #External hw files
     hw/external_hw/LPS25HB/LPS25HB.c
