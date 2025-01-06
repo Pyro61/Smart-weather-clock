@@ -22,6 +22,8 @@
  * limitations under the License.
  */
 
+#include <stdint.h>
+
 #ifndef __CMSIS_GCC_H
 #define __CMSIS_GCC_H
 
