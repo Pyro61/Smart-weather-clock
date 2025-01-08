@@ -3,6 +3,8 @@
 #include "../gpio/gpio.h"
 #include "../../../safe_state/safe_state.h"
 
+
+
 void spi1_init(void)
 {
     /* Enable SPI clock */
@@ -37,6 +39,25 @@ void spi1_init(void)
 }
 
 
+enum spi_state spi1_write_polling(uint8_t reg, uint8_t *data, uint8_t bytes_num)
+{
+    /* Check if line is busy */
+    if (SPI1 -> SR & SPI_SR_BSY)
+    {
+        return SPI_BUSY;
+    }
 
+    uint8_t i;
+    /* Send register address to slave */
+    *(volatile uint8_t *)&SPI1 -> DR = reg;
+    
+    /* Send data */
+    for (i = 0; i < bytes_num; i++)
+    {
+        while (!(SPI1 -> SR & SPI_SR_TXE)); /* Wait for transmit buffer to be not full */
+        *(volatile uint8_t *)&SPI1 -> DR = data[i];
+    }
+    return SPI_OK;
+}
 
 
