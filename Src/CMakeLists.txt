@@ -28,6 +28,7 @@ set(C_SRCS
     logic_init.c
 
     #External hw files
+    hw/external_hw/external_hw_init.c
     hw/external_hw/LPS25HB/LPS25HB.c
 
     #MCU hw files
