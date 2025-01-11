@@ -2,8 +2,10 @@
 #include "stm32g4xx.h"
 #include "../gpio/gpio.h"
 #include "../../../safe_state/safe_state.h"
+#include <stdlib.h>
 
 
+cb_t recv_callback;
 
 void spi1_init(void)
 {
@@ -31,6 +33,7 @@ void spi1_init(void)
 	 * Periph addr, priority, memory and periph sizes, mem inc mode, transfer complete and error IRQ, DMA request source */
 	DMA1_Channel1 -> CPAR = (uint32_t)&(SPI1 -> DR);
 	DMA1_Channel1 -> CCR |= DMA_CCR_PL_0 | DMA_CCR_MINC | DMA_CCR_TEIE | DMA_CCR_TCIE;
+    NVIC_SetPriority(DMA1_Channel1_IRQn, 10); /* Set low priority because inside irq is called callback fun */
 	NVIC_EnableIRQ(DMA1_Channel1_IRQn);
     DMAMUX1_Channel0 -> CCR |= 0x0A << 0;
 
@@ -60,4 +63,51 @@ enum spi_state spi1_write_polling(uint8_t reg, uint8_t *data, uint8_t bytes_num)
     return SPI_OK;
 }
 
+
+enum spi_state spi1_read_dma(uint8_t reg, uint8_t *buf, uint8_t bytes_num, cb_t cb)
+{
+    /* Check if line is busy */
+    if (SPI1 -> SR & SPI_SR_BSY)
+    {
+        return SPI_BUSY;
+    }
+
+    /* Write callback address */
+    recv_callback = cb;
+
+    /* DMA settings */
+    SPI1 -> CR2 |= SPI_CR2_RXDMAEN;
+	DMA1_Channel1 -> CNDTR = bytes_num;
+	DMA1_Channel1 -> CMAR = (uint32_t)buf;
+    DMA1_Channel1 -> CCR |= DMA_CCR_EN;
+
+    /* Send register address to slave */
+    *(volatile uint8_t *)&SPI1 -> DR = reg;
+
+    return SPI_OK;
+}
+
+
+/* DMA reception finished */
+void DMA1_CH1_IRQHandler(void)
+{
+	/* SPI1 RX DMA reception finished */
+	if (DMA1 -> ISR & DMA_ISR_TCIF1)
+	{
+		/* Delete half and full complete transfer flags */
+		DMA1 -> IFCR = DMA_IFCR_CTCIF1 | DMA_IFCR_CHTIF1;
+
+		/* Disable DMA CH1 */
+		DMA1_Channel1 -> CCR &= ~DMA_CCR_EN;
+
+		/* Disable SPI1 RX DMA mode */
+		SPI1 -> CR2 &= ~SPI_CR2_RXDMAEN;
+
+		/* Reception end callback function call */
+        if (recv_callback != NULL)
+        {
+            recv_callback();
+        }
+	}
+}
 

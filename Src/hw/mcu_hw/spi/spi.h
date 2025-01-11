@@ -9,5 +9,8 @@ enum spi_state
     SPI_BUSY = 1
 };
 
+typedef void (*cb_t)(void);
+
 void spi1_init(void);
 enum spi_state spi1_write_polling(uint8_t reg, uint8_t *data, uint8_t bytes_num);
+enum spi_state spi1_read_dma(uint8_t reg, uint8_t *buf, uint8_t bytes_num, cb_t cb);
