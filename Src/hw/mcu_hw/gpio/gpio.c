@@ -1,6 +1,7 @@
 #include "gpio.h"
 #include "stm32g4xx.h"
-#include "stdbool.h"
+#include <stdbool.h>
+#include <stdlib.h>
 
 /* Quantity defines (mcu specific) */
 #define PORT_QUANTITY           7
@@ -13,7 +14,10 @@
 /* Port address pointer */
 GPIO_TypeDef *port_ptr;
 
-/* port address pointers array */
+/* EXTI callback address holder */
+cb_t exti_cb_array[PIN_QUANTITY];
+
+/* Port address pointers array */
 GPIO_TypeDef *const port_ptr_array[PORT_QUANTITY] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG};
 
 /* Support function declarations */
@@ -24,7 +28,9 @@ static bool is_pp_od_correct(enum gpio_pp_od pp_od);
 static bool is_pull_correct(enum gpio_pull pull);
 static bool is_speed_correct(enum gpio_speed speed);
 static bool is_af_correct(uint8_t af);
+static bool is_trigger_correct(enum exti_trigger trig);
 static uint8_t get_af_reg(uint8_t pin);
+static uint8_t get_exti_irq_n(uint8_t pin);
 
 
 enum gpio_err gpio_config(enum gpio_port port, uint8_t pin, uint8_t mode, uint8_t pp_od, uint8_t pull, uint8_t speed)
@@ -93,6 +99,60 @@ enum gpio_err gpio_set_af(enum gpio_port port, uint8_t pin, uint8_t af)
 }
 
 
+enum gpio_err gpio_set_exti(uint8_t pin, enum exti_trigger trig, cb_t cb)
+{
+    /* Check if all values are correct */
+    if (is_pin_correct(pin) && is_trigger_correct(trig))
+    {   
+        if (exti_cb_array[pin] != NULL)
+        {
+            /* EXTI on that pin is already configured, abort configuration */
+            return ERR;
+        }
+
+        /* Set trigger edge */
+        switch (trig)
+        {
+            case RISING_EDGE:
+            {
+                EXTI -> RTSR1 |= 1 << pin;
+                break;
+            }
+
+            case FALLING_EDGE:
+            {
+                EXTI -> FTSR1 |= 1 << pin;
+                break;
+            }
+
+            case BOTH_EDGES:
+            {
+                EXTI -> RTSR1 |= 1 << pin;
+                EXTI -> FTSR1 |= 1 << pin;
+                break;
+            }
+        }
+        
+        /* Configure NVIC */
+        uint8_t irq_n = get_exti_irq_n(pin);
+        EXTI -> IMR1 |= 1 << pin; /* Disable irq mask */
+        NVIC_SetPriority(irq_n, 10); /* Set low priority because inside irq callback is called */
+        NVIC_EnableIRQ(irq_n);
+
+        /* Write callback to holder */
+        exti_cb_array[pin] = cb;
+
+        return NO_ERR;
+    }
+
+    else
+    {
+        /* Something is wrong, don't configure exti */
+        return ERR;
+    }
+}
+
+
 enum gpio_err gpio_output_write(enum gpio_port port, uint8_t pin, enum gpio_state state)
 {
     if (is_port_correct(port) && is_pin_correct(pin))
@@ -136,6 +196,18 @@ enum gpio_state gpio_input_read(enum gpio_port port, uint8_t pin)
     else
     {
         return STATE_ERR;
+    }
+}
+
+
+/* EXTI IRQ */
+void EXTI15_10_IRQHandler(void)
+{
+    /* EXTI line 12 IRQ */
+    if (EXTI -> PR1 & EXTI_PR1_PIF12)
+    {
+        EXTI -> PR1 |= EXTI_PR1_PIF12;
+        exti_cb_array[12]();
     }
 }
 
@@ -186,10 +258,18 @@ static bool is_speed_correct(enum gpio_speed speed)
     return speed >= START_SPEED && speed <= END_SPEED;
 }
 
+
 static bool is_af_correct(uint8_t af)
 {
     return af <= AF_QUANTITY;
 }
+
+
+static bool is_trigger_correct(enum exti_trigger trig)
+{
+    return trig >= START_TRIG && trig <= END_TRIG;
+}
+
 
 static uint8_t get_af_reg(uint8_t pin)
 {
@@ -202,4 +282,16 @@ static uint8_t get_af_reg(uint8_t pin)
     {
         return 0;
     }
+}
+
+
+static uint8_t get_exti_irq_n(uint8_t pin)
+{
+    if (pin == 0) return EXTI0_IRQn;
+    else if (pin == 1) return EXTI1_IRQn;
+    else if (pin == 2) return EXTI2_IRQn;
+    else if (pin == 3) return EXTI3_IRQn;
+    else if (pin == 4) return EXTI4_IRQn;
+    else if (pin >= 5 && pin <= 9) return EXTI9_5_IRQn;
+    else if (pin >= 10 && pin <= 15) return EXTI15_10_IRQn;
 }

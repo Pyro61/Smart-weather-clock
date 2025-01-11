@@ -2,6 +2,10 @@
 
 #include "stdint.h"
 
+
+/* EXTI callback function typedef */
+typedef void (*cb_t)(void);
+
 /* Enums with gpio config options */
 enum gpio_port
 {
@@ -66,8 +70,18 @@ enum gpio_err
     NO_ERR = 0
 };
 
+enum exti_trigger
+{
+    START_TRIG = 0,
+    RISING_EDGE = 0,
+    FALLING_EDGE = 1,
+    BOTH_EDGES = 2,
+    END_TRIG = 2
+};
+
 
 enum gpio_err gpio_set_af(enum gpio_port port, uint8_t pin, uint8_t af);
 enum gpio_err gpio_config(enum gpio_port port, uint8_t pin, uint8_t mode, uint8_t pp_od, uint8_t pull, uint8_t speed);
+enum gpio_err gpio_set_exti(uint8_t pin, enum exti_trigger trig, cb_t cb);
 enum gpio_err gpio_output_write(enum gpio_port port, uint8_t pin, enum gpio_state state);
 enum gpio_state gpio_input_read(enum gpio_port port, uint8_t pin);
