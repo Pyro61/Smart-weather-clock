@@ -5,7 +5,21 @@
 #include <stdlib.h>
 
 
+enum spi_state
+{
+    SPI_ERR = -1,
+    SPI_FREE = 0,
+    SPI_BUSY = 1,
+    SPI_NOT_INITIALIZED = 2
+};
+
+
+/* Callback address holder */
 cb_t recv_callback;
+
+/* SPI1 state holder */
+enum spi_state spi1_state = SPI_NOT_INITIALIZED;
+
 
 void spi1_init(void)
 {
@@ -33,24 +47,44 @@ void spi1_init(void)
 	 * Periph addr, priority, memory and periph sizes, mem inc mode, transfer complete and error IRQ, DMA request source */
 	DMA1_Channel1 -> CPAR = (uint32_t)&(SPI1 -> DR);
 	DMA1_Channel1 -> CCR |= DMA_CCR_PL_0 | DMA_CCR_MINC | DMA_CCR_TEIE | DMA_CCR_TCIE;
-    NVIC_SetPriority(DMA1_Channel1_IRQn, 10); /* Set low priority because inside irq is called callback fun */
+    NVIC_SetPriority(DMA1_Channel1_IRQn, 10); /* Set low priority because inside irq callback fun is called */
 	NVIC_EnableIRQ(DMA1_Channel1_IRQn);
     DMAMUX1_Channel0 -> CCR |= 0x0A << 0;
 
 	/* Enable SPI */
 	SPI1 -> CR1 |= SPI_CR1_SPE;
+
+    spi1_state = SPI_FREE;
 }
 
 
-enum spi_state spi1_write_polling(uint8_t reg, uint8_t *data, uint8_t bytes_num)
+/* Returns if spi1 is ready to use */
+bool is_spi1_bus_free(void)
 {
-    /* Check if line is busy */
-    if (SPI1 -> SR & SPI_SR_BSY)
+    if (spi1_state == SPI_FREE)
     {
-        return SPI_BUSY;
+        return true;
     }
 
+    else
+    {
+        return false;
+    }
+}
+
+
+/* SPI master transmit */
+void spi1_write_polling(uint8_t reg, uint8_t *data, uint8_t bytes_num)
+{
+    /* Mechanism blocking using spi when it's not ready to use */
+    if (spi1_state != SPI_FREE)
+    {
+        return;
+    }
+
+    spi1_state = SPI_BUSY;
     uint8_t i;
+
     /* Send register address to slave */
     *(volatile uint8_t *)&SPI1 -> DR = reg;
     
@@ -60,17 +94,21 @@ enum spi_state spi1_write_polling(uint8_t reg, uint8_t *data, uint8_t bytes_num)
         while (!(SPI1 -> SR & SPI_SR_TXE)); /* Wait for transmit buffer to be not full */
         *(volatile uint8_t *)&SPI1 -> DR = data[i];
     }
-    return SPI_OK;
+
+    spi1_state = SPI_FREE;
 }
 
 
-enum spi_state spi1_read_dma(uint8_t reg, uint8_t *buf, uint8_t bytes_num, cb_t cb)
+/* SPI master receive */
+void spi1_read_dma(uint8_t reg, uint8_t *buf, uint8_t bytes_num, cb_t cb)
 {
-    /* Check if line is busy */
-    if (SPI1 -> SR & SPI_SR_BSY)
+    /* Mechanism blocking using spi when it's not ready to use */
+    if (spi1_state != SPI_FREE)
     {
-        return SPI_BUSY;
+        return;
     }
+
+    spi1_state = SPI_BUSY;
 
     /* Write callback address */
     recv_callback = cb;
@@ -83,8 +121,6 @@ enum spi_state spi1_read_dma(uint8_t reg, uint8_t *buf, uint8_t bytes_num, cb_t 
 
     /* Send register address to slave */
     *(volatile uint8_t *)&SPI1 -> DR = reg;
-
-    return SPI_OK;
 }
 
 
@@ -102,6 +138,9 @@ void DMA1_CH1_IRQHandler(void)
 
 		/* Disable SPI1 RX DMA mode */
 		SPI1 -> CR2 &= ~SPI_CR2_RXDMAEN;
+
+        /* Change SPI1 state variable */
+        spi1_state = SPI_FREE;
 
 		/* Reception end callback function call */
         if (recv_callback != NULL)
