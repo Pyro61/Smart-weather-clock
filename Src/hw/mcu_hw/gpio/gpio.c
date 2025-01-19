@@ -85,8 +85,8 @@ enum gpio_err gpio_set_af(enum gpio_port port, uint8_t pin, uint8_t af)
         af_reg = get_af_reg(pin);
 
         /* Reset and set af register */
-        port_ptr_af -> AFR[af_reg] &= ~(0xF << (pin * 4));
-        port_ptr_af -> AFR[af_reg] |= (af << (pin * 4));
+        port_ptr_af -> AFR[af_reg] &= ~(0xF << ((pin % 8) * 4));
+        port_ptr_af -> AFR[af_reg] |= (af << ((pin % 8) * 4));
 
         return NO_ERR;
     }
