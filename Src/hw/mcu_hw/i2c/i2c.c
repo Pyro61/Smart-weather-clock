@@ -5,17 +5,7 @@
 #include <stdlib.h>
 
 
-enum i2c_state
-{
-    I2C_ERR = -1,
-    I2C_FREE = 0,
-    I2C_BUSY = 1,
-    I2C_NOT_INITIALIZED = 2
-};
-
-
 cb_t i2c1_recv_dma_cb;
-enum i2c_state i2c1_state = I2C_NOT_INITIALIZED;
 
 
 void i2c1_init(void)
@@ -44,9 +34,6 @@ void i2c1_init(void)
     NVIC_SetPriority(DMA1_Channel2_IRQn, 10); /* Set low priority because inside irq callback fun is called */
 	NVIC_EnableIRQ(DMA1_Channel2_IRQn);
 	DMAMUX1_Channel1 -> CCR |= 16;
-
-    /* Set i2c1_state flag */
-    i2c1_state = I2C_FREE;
 }
 
 
