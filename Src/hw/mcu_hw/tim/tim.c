@@ -9,9 +9,14 @@
 /* Clock frequency, set in core_clock submodule */
 extern uint32_t clock_freq;
 
+
+
+/********************************************************************************************/
+/*                                      TIM6 - delay                                        */
+/********************************************************************************************/
+
 /* Used in delay_ms function */
 static uint32_t ms_elapsed = 0;
-
 
 void tim_delay_init(void)
 {
@@ -36,6 +41,34 @@ void tim_delay_init(void)
 }
 
 
+void delay_ms(uint32_t delay)
+{
+	ms_elapsed = 0;
+
+	/* Enable counter */
+	TIM6 -> CR1 |= TIM_CR1_CEN;
+
+	while(delay > ms_elapsed);
+
+	/* Disable counter */
+	TIM6 -> CR1 &= ~TIM_CR1_CEN;
+}
+
+
+/* 1ms elapsed interrupt */
+void TIM6_DACUNDER_IRQHandler(void)
+{
+	if (TIM6 -> SR & TIM_SR_UIF)
+	{
+		TIM6 -> SR &= ~(TIM_SR_UIF);
+		ms_elapsed++;
+	}
+}
+
+
+/********************************************************************************************/
+/*                                    TIM7 - periodic                                       */
+/********************************************************************************************/
 void tim_periodic_init(void)
 {
 	/* Prescaler and auto-reload register values dependent on clock freq and measurement delay */
@@ -61,20 +94,6 @@ void tim_periodic_init(void)
 }
 
 
-void delay_ms(uint32_t delay)
-{
-	ms_elapsed = 0;
-
-	/* Enable counter */
-	TIM6 -> CR1 |= TIM_CR1_CEN;
-
-	while(delay > ms_elapsed);
-
-	/* Disable counter */
-	TIM6 -> CR1 &= ~TIM_CR1_CEN;
-}
-
-
 void tim_periodic_start(void)
 {
 	/* Reset counter and start counting */
@@ -97,19 +116,7 @@ void tim_periodic_generate_update(void)
 }
 
 
-/* Interrupts */
-/* Delay - 1ms elapsed */
-void TIM6_DACUNDER_IRQHandler(void)
-{
-	if (TIM6 -> SR & TIM_SR_UIF)
-	{
-		TIM6 -> SR &= ~(TIM_SR_UIF);
-		ms_elapsed++;
-	}
-}
-
-
-/* Periodic - set time elapsed */
+/* Settime elapsed interrupt */
 void TIM7_IRQHandler(void)
 {
 	if (TIM7 -> SR & TIM_SR_UIF)
@@ -118,3 +125,5 @@ void TIM7_IRQHandler(void)
 		events_notify_subscribers(EVENT_MEAS_DELAY_ELAPSED);
 	}
 }
+
+
