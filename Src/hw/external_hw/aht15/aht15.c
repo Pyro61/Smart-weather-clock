@@ -37,15 +37,9 @@ static uint8_t data_buf[DATA_SIZE];
 static const uint8_t trigger_measurement_cmd[AHT15_MEASURE_CMD_SIZE] = {AHT15_MEASURE_BYTE_1, AHT15_MEASURE_BYTE_2, AHT15_MEASURE_BYTE_3};
 
 
-/* Helper function definitions */
+/* Helper functions declarations */
 static void aht15_write(const uint8_t *cmd, uint8_t size);
-
-
-void aht15_read_data(void)
-{
-    while (!is_i2c2_bus_free());
-    i2c2_read_dma(AHT15_ADDR, data_buf, DATA_SIZE, NULL);
-}
+static void aht15_read_data(void);
 
 
 static void aht15_soft_reset(void)
@@ -58,7 +52,7 @@ static void aht15_soft_reset(void)
 void aht15_start_measuring(void)
 {
     aht15_write(&trigger_measurement_cmd[0], AHT15_MEASURE_CMD_SIZE);
-    //timer 80ms and read data
+    tim_meas_no_block_start(AHT15_MEASURE_TIME_MS, aht15_read_data);
 }
 
 
@@ -87,9 +81,16 @@ int32_t aht15_get_temp(void)
 }
 
 
-/* Helper functions */
+/* Helper functions definitions */
 static void aht15_write(const uint8_t *cmd, uint8_t size)
 {
     while (!is_i2c2_bus_free());
     i2c2_write_polling(AHT15_ADDR, cmd, size); /* AHT15 don't have registers, so only write commands instead of registers and data */
+}
+
+
+static void aht15_read_data(void)
+{
+    while (!is_i2c2_bus_free());
+    i2c2_read_dma(AHT15_ADDR, data_buf, DATA_SIZE, NULL);
 }
