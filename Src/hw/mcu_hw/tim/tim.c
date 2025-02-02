@@ -1,6 +1,8 @@
 #include "tim.h"
 #include "stm32g4xx.h"
 #include "../../../events/events.h"
+#include <stdbool.h>
+#include <stdlib.h>
 
 
 /* Calculate seconds to miliseconds */
@@ -127,3 +129,78 @@ void TIM7_IRQHandler(void)
 }
 
 
+/********************************************************************************************/
+/*                         TIM15 - time measurement non-blocking                            */
+/********************************************************************************************/
+/* Callback holder */
+static cb_t tim_meas_no_block_cb;
+
+/* Helper functions declarations */
+static bool is_tim_meas_no_block_free(void);
+
+
+void tim_meas_no_block_init(void)
+{
+	/* Prescaler register value dependent on clock freq */
+	uint32_t ms_presc = clock_freq / 1000;
+
+	/* Enable TIM15 clock, set up-counting and prescaler */
+	RCC -> APB2ENR |= RCC_APB2ENR_TIM15EN;
+	TIM15 -> CR1 &= ~(TIM_CR1_DIR);
+	TIM15 -> PSC = ms_presc - 1;
+	
+	/* Update registers and clear irq flag */
+	TIM15 -> EGR = TIM_EGR_UG;
+	TIM15 -> SR &= ~(TIM_SR_UIF);
+	
+	/* Enable counter overflow interrupt */
+	TIM15 -> DIER |= TIM_DIER_UIE;
+	NVIC_ClearPendingIRQ(TIM1_BRK_TIM15_IRQn);
+	NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, 4);
+	NVIC_EnableIRQ(TIM1_BRK_TIM15_IRQn);
+}
+
+
+void tim_meas_no_block_start(ms_t time, cb_t cb)
+{
+	/* Check if tim is no used at this moment */
+	if (!is_tim_meas_no_block_free())
+	{
+		return;
+	}
+	/* Save cb to holder */
+	tim_meas_no_block_cb = cb;
+
+	/* Set time */
+	TIM15 -> ARR = time - 1;
+
+	/* Reset counter and start counting */
+	TIM15 -> CNT = 0;
+	TIM15 -> CR1 |= TIM_CR1_CEN;
+}
+
+
+/* Settime elapsed interrupt */
+void TIM1_BRK_TIM15_IRQHandler(void)
+{
+	if (TIM15 -> SR & TIM_SR_UIF)
+	{
+		TIM15 -> SR &= ~TIM_SR_UIF;
+
+		/* Disable timer */
+		TIM15 -> CR1 &= ~TIM_CR1_CEN;
+
+		/* Time elapsed callback */
+		if (tim_meas_no_block_cb != NULL)
+		{
+			tim_meas_no_block_cb();
+		}
+	}
+}
+
+
+/* Helper functions definitions */
+static bool is_tim_meas_no_block_free(void)
+{
+	return !((TIM15 -> CR1) & TIM_CR1_CEN);
+}

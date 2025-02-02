@@ -13,6 +13,7 @@ void mcu_hw_init(void)
     spi1_init();
     tim_delay_init();
     tim_periodic_init();
+    tim_meas_no_block_init();
     i2c1_init();
     i2c2_init();
 }
