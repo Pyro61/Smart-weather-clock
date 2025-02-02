@@ -22,7 +22,7 @@ void i2c1_init(void)
     if (gpio_set_af(PORT_B, 9, 4) == ERR) safe_state();
 
 	/* I2C settings
-	 * Master mode, timing reg, STOP signal detection IRQ, enable peripheral and enable own address 1 */
+	 * Master mode, timing reg, STOP signal detection IRQ, disable analog filter, enable peripheral and enable own address 1 */
 	RCC -> APB1ENR1 |= RCC_APB1ENR1_I2C1EN;
 	I2C1 -> TIMINGR = 0x00601851;
 	I2C1 -> CR1 |= I2C_CR1_PE | I2C_CR1_STOPIE | I2C_CR1_ANFOFF;
@@ -164,3 +164,141 @@ void I2C1_EV_IRQHandler(void)
 /*                                           I2C2                                           */
 /********************************************************************************************/
 
+cb_t i2c2_recv_dma_cb;
+
+
+void i2c2_init(void)
+{
+	/* GPIO settings
+	 * PA8 - SDA, PA9 - SCL */
+	if (gpio_config(PORT_A, 8, ALTERNATE_FUN, OPEN_DRAIN, PULL_UP, SPEED_HIGH) == ERR) safe_state();
+    if (gpio_set_af(PORT_A, 8, 4) == ERR) safe_state();
+    if (gpio_config(PORT_A, 9, ALTERNATE_FUN, OPEN_DRAIN, PULL_UP, SPEED_HIGH) == ERR) safe_state();
+    if (gpio_set_af(PORT_A, 9, 4) == ERR) safe_state();
+
+	/* I2C settings
+	 * Master mode, timing reg, STOP signal detection IRQ, disable analog filter, enable peripheral and enable own address 1 */
+	RCC -> APB1ENR1 |= RCC_APB1ENR1_I2C2EN;
+	I2C2 -> TIMINGR = 0x00D0D2FF;
+	I2C2 -> CR1 |= I2C_CR1_PE | I2C_CR1_STOPIE | I2C_CR1_ANFOFF;
+	NVIC_EnableIRQ(I2C2_EV_IRQn);
+	I2C2 -> OAR1 |= I2C_OAR1_OA1EN;
+
+	/* DMA settings */
+	RCC -> AHB1ENR |= RCC_AHB1ENR_DMA1EN;
+	/* Receive
+	 * Periph addr, priority, memory and periph sizes, mem inc mode, transfer complete and error IRQ, DMA request source */
+	DMA1_Channel3 -> CPAR = (uint32_t)&(I2C2 -> RXDR);
+	DMA1_Channel3 -> CCR |= DMA_CCR_PL_0 | DMA_CCR_MINC | DMA_CCR_TEIE | DMA_CCR_TCIE;
+    NVIC_SetPriority(DMA1_Channel3_IRQn, 10); /* Set low priority because inside irq callback fun is called */
+	NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+	DMAMUX1_Channel2 -> CCR |= 18;
+}
+
+
+/* Returns true if i2c2 is ready to use */
+bool is_i2c2_bus_free(void)
+{
+    if (I2C2 -> ISR & I2C_ISR_BUSY)
+    {
+        return false;
+    }
+
+    else
+    {
+        return true;
+    }
+}
+
+
+void i2c2_write_polling(const uint8_t addr, const uint8_t *data, const uint8_t size)
+{
+	uint8_t i;
+	/* Write reg address to slave */
+	I2C2 -> CR2 = addr | ((size) << 16) | I2C_CR2_AUTOEND;
+	
+	/* Not using slave registers, so must write 1st byte of data before start */
+	I2C2 -> TXDR = data[0];
+	I2C2 -> CR2 |= I2C_CR2_START;
+
+	/* Write data (1st byte is written) */
+	for (i = 1; i < size; i++)
+	{
+		while (!((I2C2 -> ISR) & I2C_ISR_TXIS));
+		I2C2 -> TXDR = data[i];
+	}
+}
+
+
+void i2c2_read_polling(const uint8_t addr, uint8_t *buf, const uint8_t size)
+{
+	uint8_t i;
+	
+	/* Read slave reg value */
+	I2C2 -> CR2 = addr | (size << 16) | I2C_CR2_RD_WRN;
+	I2C2 -> CR2 |= I2C_CR2_START;
+	for (i = 0; i < size; i++)
+	{
+		while (!(I2C2 -> ISR & I2C_ISR_RXNE));
+		buf[i] = I2C2 -> RXDR;
+	}
+
+	/* Wait for transmission end */
+	while (!(I2C2 -> ISR & I2C_ISR_TC));
+	I2C2 -> CR2 |= I2C_CR2_STOP;
+}
+
+
+void i2c2_read_dma(const uint8_t addr, uint8_t *buf, const uint8_t size, const cb_t cb)
+{
+    /* Write callback address to holder */
+    i2c2_recv_dma_cb = cb;
+
+	/* DMA transfer settings */
+	I2C2 -> CR1 |= I2C_CR1_RXDMAEN;
+	DMA1_Channel3 -> CNDTR = size;
+	DMA1_Channel3 -> CMAR = (uint32_t)buf;
+
+	/* Read slave reg value */
+	I2C2 -> CR2 = addr | (size << 16) | I2C_CR2_RD_WRN;
+
+	/* Start reading */
+	DMA1_Channel3 -> CCR |= DMA_CCR_EN;
+	I2C2 -> CR2 |= I2C_CR2_START;
+}
+
+
+/* I2C2 DMA reception end irq */
+void DMA1_CH3_IRQHandler(void)
+{
+	if (DMA1 -> ISR & DMA_ISR_TCIF3)
+	{
+		/* Delete half and full complete transfer flags */
+		DMA1 -> IFCR = DMA_IFCR_CTCIF3 | DMA_IFCR_CHTIF3;
+
+		/* Disable DMA CH2 */
+		DMA1_Channel3 -> CCR &= ~DMA_CCR_EN;
+
+		/* Disable I2C RX DMA mode */
+		I2C2 -> CR1 &= ~I2C_CR1_RXDMAEN;
+
+		/* End I2C transmission */
+		I2C2 -> CR2 |= I2C_CR2_STOP;
+
+		/* Reception end callback */
+		if (i2c2_recv_dma_cb != NULL)
+        {
+            i2c2_recv_dma_cb();
+        }
+	}
+}
+
+
+/* I2C2 Interrupt */
+void I2C2_EV_IRQHandler(void)
+{
+	if (I2C2 -> ISR & I2C_ISR_STOPF)
+	{
+		I2C2 -> ICR = I2C_ICR_STOPCF;
+	}
+}

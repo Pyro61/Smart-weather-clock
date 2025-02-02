@@ -14,4 +14,5 @@ void mcu_hw_init(void)
     tim_delay_init();
     tim_periodic_init();
     i2c1_init();
+    i2c2_init();
 }
