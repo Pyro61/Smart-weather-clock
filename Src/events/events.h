@@ -3,7 +3,7 @@
 #include "stdint.h"
 
 
-#define EVENTS_MAX_SUBSCRIBERS  8
+#define EVENTS_MAX_SUBSCRIBERS  25
 
 
 enum event
