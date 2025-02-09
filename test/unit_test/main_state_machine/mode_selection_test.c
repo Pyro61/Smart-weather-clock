@@ -57,6 +57,14 @@ TEST(mode_selection, OnExitDisplayOutput)
 }
 
 
+TEST(mode_selection, AfterEntrySelectedModeIs1)
+{
+    entry_state();
+    enum state_status state = press_ok_mode_button();
+    TEST_ASSERT_EQUAL(state, MODE_1);
+}
+
+
 TEST(mode_selection, WhenSelectedModeIs1ClickUpButtonThenSelectedModeIsStill1)
 {
     entry_state();
