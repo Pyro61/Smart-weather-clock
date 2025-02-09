@@ -53,6 +53,7 @@ static void mode_selection_init(struct display_interface *funs)
 
 static void mode_selection_on_entry(void)
 {
+    selected_mode = 1;
     prepare_buf(selected_mode);
     display.print(buf);
 }
