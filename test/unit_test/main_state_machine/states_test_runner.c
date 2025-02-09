@@ -7,4 +7,5 @@ TEST_GROUP_RUNNER(mode_selection)
    RUN_TEST_CASE(mode_selection, OnExitDisplayOutput);
    RUN_TEST_CASE(mode_selection, AfterEntrySelectedModeIs1);
    RUN_TEST_CASE(mode_selection, WhenSelectedModeIs1ClickUpButtonThenSelectedModeIsStill1);
+   RUN_TEST_CASE(mode_selection, WhenSelectedModeIs1ClickDownButtonThenSelectedModeIs2);
 }

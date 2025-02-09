@@ -9,8 +9,10 @@
 
 #define CLEARED_MESSAGE             "\0"
 #define SELECTED_MODE_1_MESSAGE     "> 1. weather indoor\n  2. weather outdoor\n  3. set time\n  4. set alarm"
+#define SELECTED_MODE_2_MESSAGE     "  1. weather indoor\n> 2. weather outdoor\n  3. set time\n  4. set alarm"
 
 #define MODE_1                      WEATHER_IN
+#define MODE_2                      WEATHER_OUT
 
 typedef const struct main_state_interface * (*main_state_get_t)(void);
 static const main_state_get_t (mode_selection_funs) = main_state_mode_selection_get;
@@ -23,6 +25,7 @@ static void entry_state(void);
 static void exit_state(void);
 static enum state_status press_ok_mode_button(void);
 static void press_up_button(void);
+static void press_down_button(void);
 
 TEST_GROUP(mode_selection);
 
@@ -76,6 +79,17 @@ TEST(mode_selection, WhenSelectedModeIs1ClickUpButtonThenSelectedModeIsStill1)
 }
 
 
+TEST(mode_selection, WhenSelectedModeIs1ClickDownButtonThenSelectedModeIs2)
+{
+    entry_state();
+    press_down_button();
+    enum state_status state = press_ok_mode_button();
+
+    TEST_ASSERT_EQUAL_STRING(SELECTED_MODE_2_MESSAGE, test_buf);
+    TEST_ASSERT_EQUAL(state, MODE_2);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
@@ -112,6 +126,13 @@ static enum state_status press_ok_mode_button(void)
 static void press_up_button(void)
 {
     mode_selection_funs() -> on_up_button_pressed();
+    display_mock_read_buf(test_buf);
+}
+
+
+static void press_down_button(void)
+{
+    mode_selection_funs() -> on_down_button_pressed();
     display_mock_read_buf(test_buf);
 }
 
