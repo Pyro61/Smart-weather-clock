@@ -12,7 +12,7 @@
 #define SELECTED_MODE_2_MESSAGE     "  1. weather indoor\n> 2. weather outdoor\n  3. set time\n  4. set alarm"
 #define SELECTED_MODE_3_MESSAGE     "  1. weather indoor\n  2. weather outdoor\n> 3. set time\n  4. set alarm"
 #define SELECTED_MODE_4_MESSAGE     "  1. weather indoor\n  2. weather outdoor\n  3. set time\n> 4. set alarm"
-#define MESSAGE_AFTER_REFRESH       "  1. weather indoor\n  2. weather outdoor\n  3. set time\n  4. set alarm"
+#define MESSAGE_AFTER_REFRESH       "  1. weather indoor\n  2. weather outdoor\n  3. set time\n  4. set alarm" /* No selected mode sign */
 
 #define MODE_1                      WEATHER_IN
 #define MODE_2                      WEATHER_OUT
@@ -170,6 +170,16 @@ TEST(mode_selection, AfterRefreshChangedSelectedModeThenThereIsSelectedModeSign)
     refresh();
     press_down_button();
     TEST_ASSERT_EQUAL_STRING(SELECTED_MODE_2_MESSAGE, test_buf);
+}
+
+
+TEST(mode_selection, AfterRefreshChangedSelectedModeAfterThatRefreshThenThereIsNoSelectedSign)
+{
+    entry_state();
+    refresh();
+    press_down_button();
+    refresh();
+    TEST_ASSERT_EQUAL_STRING(MESSAGE_AFTER_REFRESH, test_buf);
 }
 
 
