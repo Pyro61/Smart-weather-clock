@@ -164,6 +164,15 @@ TEST(mode_selection, AfterDoubleRefreshThereIsSelectedSign)
 }
 
 
+TEST(mode_selection, AfterRefreshChangedSelectedModeThenThereIsSelectedModeSign)
+{
+    entry_state();
+    refresh();
+    press_down_button();
+    TEST_ASSERT_EQUAL_STRING(SELECTED_MODE_2_MESSAGE, test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
