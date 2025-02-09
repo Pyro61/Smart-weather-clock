@@ -22,7 +22,7 @@ enum state_status
 typedef void (*main_state_init_t)(struct display_interface *display_funs);
 
 /* Entry to and exit from state function pointer typedefs */
-typedef void (*main_state_entry_t)(void);
+typedef void (*main_state_entry_t)(enum state_status last_state);
 typedef void (*main_state_exit_t)(void);
 
 /* Typedefs for state reactions to events */

@@ -3,8 +3,9 @@
 #include "../safe_state/safe_state.h"
 
 
-/* First state after power-up */
+/* Currect and last state */
 static enum state_status current_state = WEATHER_IN;
+static enum state_status last_state = MODE_SELECTION;
 
 /* States functions */
 typedef const struct main_state_interface * (*main_state_get_t)(void);
@@ -23,8 +24,9 @@ static void state_change_if_needed(enum state_status status)
     {
         /* Entry and exit functions must never require another change of state */
         states[current_state]() -> on_exit();
+        last_state = current_state;
         current_state = status;
-        states[current_state]() -> on_entry();
+        states[current_state]() -> on_entry(last_state);
     }
     
 }
@@ -102,6 +104,6 @@ void main_state_machine_init(struct display_interface *display_funs)
     state_machine_init_all_states(display_funs);
 
     /* Entry initial state */
-    states[current_state]() -> on_entry();
+    states[current_state]() -> on_entry(last_state);
 }
 
