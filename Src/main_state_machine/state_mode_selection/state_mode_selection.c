@@ -26,7 +26,7 @@ static char buf[BUFFER_MAX_SIZE];
 static uint8_t selected_mode = 1;
 
 /* Positions where to put selected sign in buffer */
-static const uint8_t selected_mode_sign_buf_position[SELECTABLE_MODES_QUANTITY] = {0, 21, 41, 55};
+static const uint8_t selected_mode_sign_buf_position[SELECTABLE_MODES_QUANTITY] = {0, 20, 41, 55};
 
 /* Display functions holder */
 struct display_interface display;
