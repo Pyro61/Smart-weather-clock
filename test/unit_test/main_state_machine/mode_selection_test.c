@@ -119,6 +119,18 @@ TEST(mode_selection, WhenSelectedModeIs3ClickDownButtonThenSelectedModeIs4)
 }
 
 
+TEST(mode_selection, WhenSelectedModeIs1ClickDownButtonAfterUpButtonThenSelectedModeIsStill1)
+{
+    entry_state();
+    press_down_button(); /* Change mode 1 -> 2 */
+    press_up_button(); /* Change mode 2 -> 1 */
+    enum state_status state = press_ok_mode_button();
+
+    TEST_ASSERT_EQUAL_STRING(SELECTED_MODE_1_MESSAGE, test_buf);
+    TEST_ASSERT_EQUAL(state, MODE_1);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {

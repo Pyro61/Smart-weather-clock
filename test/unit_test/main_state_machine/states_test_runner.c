@@ -10,4 +10,5 @@ TEST_GROUP_RUNNER(mode_selection)
    RUN_TEST_CASE(mode_selection, WhenSelectedModeIs1ClickDownButtonThenSelectedModeIs2);
    RUN_TEST_CASE(mode_selection, WhenSelectedModeIs2ClickDownButtonThenSelectedModeIs3);
    RUN_TEST_CASE(mode_selection, WhenSelectedModeIs3ClickDownButtonThenSelectedModeIs4);
+   RUN_TEST_CASE(mode_selection, WhenSelectedModeIs1ClickDownButtonAfterUpButtonThenSelectedModeIsStill1);
 }
