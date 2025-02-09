@@ -35,7 +35,7 @@ TEST(mode_selection, OnEntryDisplayOutput)
 {
     mode_selection_funs() -> on_entry();
     display_mock_read_buf(test_buf);
-    TEST_ASSERT_EQUAL_STRING("> 1. weather outdoor\n  2. weather indoor\n  3. set time\n  4. set alarm", test_buf);
+    TEST_ASSERT_EQUAL_STRING("> 1. weather indoor\n  2. weather outdoor\n  3. set time\n  4. set alarm", test_buf);
 }
 
 TEST(mode_selection, OnExitDisplayOutput)
@@ -44,6 +44,17 @@ TEST(mode_selection, OnExitDisplayOutput)
     mode_selection_funs() -> on_exit();
     display_mock_read_buf(test_buf);
     TEST_ASSERT_EQUAL_STRING("\0", test_buf);
+}
+
+TEST(mode_selection, WhenSelectedModeIs1ClickUpButtonThenSelectedModeIsStill1)
+{
+    mode_selection_funs() -> on_entry();
+    mode_selection_funs() -> on_up_button_pressed();
+    display_mock_read_buf(test_buf);
+    TEST_ASSERT_EQUAL_STRING("> 1. weather indoor\n  2. weather outdoor\n  3. set time\n  4. set alarm", test_buf);
+
+    enum state_status state = mode_selection_funs() -> on_ok_mode_button_pressed();
+    TEST_ASSERT_EQUAL(state, WEATHER_IN);
 }
 
 
