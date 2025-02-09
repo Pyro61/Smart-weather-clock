@@ -11,10 +11,12 @@
 #define SELECTED_MODE_1_MESSAGE     "> 1. weather indoor\n  2. weather outdoor\n  3. set time\n  4. set alarm"
 #define SELECTED_MODE_2_MESSAGE     "  1. weather indoor\n> 2. weather outdoor\n  3. set time\n  4. set alarm"
 #define SELECTED_MODE_3_MESSAGE     "  1. weather indoor\n  2. weather outdoor\n> 3. set time\n  4. set alarm"
+#define SELECTED_MODE_4_MESSAGE     "  1. weather indoor\n  2. weather outdoor\n  3. set time\n> 4. set alarm"
 
 #define MODE_1                      WEATHER_IN
 #define MODE_2                      WEATHER_OUT
 #define MODE_3                      SET_TIME
+#define MODE_4                      SET_ALARM
 
 typedef const struct main_state_interface * (*main_state_get_t)(void);
 static const main_state_get_t (mode_selection_funs) = main_state_mode_selection_get;
@@ -102,6 +104,20 @@ TEST(mode_selection, WhenSelectedModeIs2ClickDownButtonThenSelectedModeIs3)
     TEST_ASSERT_EQUAL_STRING(SELECTED_MODE_3_MESSAGE, test_buf);
     TEST_ASSERT_EQUAL(state, MODE_3);
 }
+
+
+TEST(mode_selection, WhenSelectedModeIs3ClickDownButtonThenSelectedModeIs4)
+{
+    entry_state();
+    press_down_button(); /* Change mode 1 -> 2 */
+    press_down_button(); /* Change mode 2 -> 3 */
+    press_down_button(); /* Change mode 3 -> 4 */
+    enum state_status state = press_ok_mode_button();
+
+    TEST_ASSERT_EQUAL_STRING(SELECTED_MODE_4_MESSAGE, test_buf);
+    TEST_ASSERT_EQUAL(state, MODE_4);
+}
+
 
 /* Helper functions */
 static void reset_test_buf(void)
