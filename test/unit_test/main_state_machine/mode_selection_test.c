@@ -12,6 +12,7 @@
 #define SELECTED_MODE_2_MESSAGE     "  1. weather indoor\n> 2. weather outdoor\n  3. set time\n  4. set alarm"
 #define SELECTED_MODE_3_MESSAGE     "  1. weather indoor\n  2. weather outdoor\n> 3. set time\n  4. set alarm"
 #define SELECTED_MODE_4_MESSAGE     "  1. weather indoor\n  2. weather outdoor\n  3. set time\n> 4. set alarm"
+#define MESSAGE_AFTER_REFRESH       "  1. weather indoor\n  2. weather outdoor\n  3. set time\n  4. set alarm"
 
 #define MODE_1                      WEATHER_IN
 #define MODE_2                      WEATHER_OUT
@@ -30,6 +31,7 @@ static void exit_state(void);
 static enum state_status press_ok_mode_button(void);
 static void press_up_button(void);
 static void press_down_button(void);
+static void refresh(void);
 
 TEST_GROUP(mode_selection);
 
@@ -145,6 +147,14 @@ TEST(mode_selection, WhenSelectedModeIs4ClickDownButtonThenSelectedModeIsStill4)
 }
 
 
+TEST(mode_selection, SelectedMode1MessageAfterRefreshDontHaveSelectedModeSign)
+{
+    entry_state();
+    refresh();
+    TEST_ASSERT_EQUAL_STRING(MESSAGE_AFTER_REFRESH, test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
@@ -188,6 +198,13 @@ static void press_up_button(void)
 static void press_down_button(void)
 {
     mode_selection_funs() -> on_down_button_pressed();
+    display_mock_read_buf(test_buf);
+}
+
+
+static void refresh(void)
+{
+    mode_selection_funs() -> on_refresh();
     display_mock_read_buf(test_buf);
 }
 
