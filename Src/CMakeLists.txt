@@ -26,6 +26,7 @@ set(C_SRCS
     weather_meas_state_machine/state_run/state_run.c
     weather_meas_state_machine/state_sleep/state_sleep.c
     main_state_machine/state_machine.c
+    main_state_machine/state_mode_selection/state_mode_selection.c
     logic_init.c
 
     #External hw files
