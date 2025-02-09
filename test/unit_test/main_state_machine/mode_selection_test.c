@@ -1,5 +1,4 @@
 #include "unity/fixture/unity_fixture.h"
-
 #include "assert.h"
 #include "../Src/main_state_machine/state.h"
 #include "../Src/main_state_machine/state_mode_selection/state_mode_selection.h"
@@ -7,6 +6,7 @@
 #include <string.h>
 
 
+/* Messages showed by display */
 #define CLEARED_MESSAGE             "\0"
 #define SELECTED_MODE_1_MESSAGE     "> 1. weather indoor\n  2. weather outdoor\n  3. set time\n  4. set alarm"
 #define SELECTED_MODE_2_MESSAGE     "  1. weather indoor\n> 2. weather outdoor\n  3. set time\n  4. set alarm"
@@ -14,6 +14,7 @@
 #define SELECTED_MODE_4_MESSAGE     "  1. weather indoor\n  2. weather outdoor\n  3. set time\n> 4. set alarm"
 #define MESSAGE_AFTER_REFRESH       "  1. weather indoor\n  2. weather outdoor\n  3. set time\n  4. set alarm" /* No selected mode sign */
 
+/* Modes */
 #define MODE_1                      WEATHER_IN
 #define MODE_2                      WEATHER_OUT
 #define MODE_3                      SET_TIME
@@ -22,8 +23,10 @@
 typedef const struct main_state_interface * (*main_state_get_t)(void);
 static const main_state_get_t (mode_selection_funs) = main_state_mode_selection_get;
 
+
 char test_buf[80];
 
+/* Helper function definitions */
 static void reset_test_buf(void);
 static void init_state(void);
 static void entry_state(void);
@@ -32,6 +35,7 @@ static enum state_status press_ok_mode_button(void);
 static void press_up_button(void);
 static void press_down_button(void);
 static void refresh(void);
+
 
 TEST_GROUP(mode_selection);
 
@@ -77,7 +81,7 @@ TEST(mode_selection, AfterEntrySelectedModeIs1)
 TEST(mode_selection, WhenSelectedModeIs1ClickUpButtonThenSelectedModeIsStill1)
 {
     entry_state();
-    press_up_button();
+    press_up_button(); /* Mode should be still 1 */
     enum state_status state = press_ok_mode_button();
 
     TEST_ASSERT_EQUAL_STRING(SELECTED_MODE_1_MESSAGE, test_buf);
@@ -88,7 +92,7 @@ TEST(mode_selection, WhenSelectedModeIs1ClickUpButtonThenSelectedModeIsStill1)
 TEST(mode_selection, WhenSelectedModeIs1ClickDownButtonThenSelectedModeIs2)
 {
     entry_state();
-    press_down_button();
+    press_down_button(); /* Change mode 1 -> 2 */
     enum state_status state = press_ok_mode_button();
 
     TEST_ASSERT_EQUAL_STRING(SELECTED_MODE_2_MESSAGE, test_buf);
