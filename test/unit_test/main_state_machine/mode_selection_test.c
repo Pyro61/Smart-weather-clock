@@ -38,6 +38,14 @@ TEST(mode_selection, OnEntryDisplayOutput)
     TEST_ASSERT_EQUAL_STRING("> 1. weather outdoor\n  2. weather indoor\n  3. set time\n  4. set alarm", test_buf);
 }
 
+TEST(mode_selection, OnExitDisplayOutput)
+{
+    mode_selection_funs() -> on_entry();
+    mode_selection_funs() -> on_exit();
+    display_mock_read_buf(test_buf);
+    TEST_ASSERT_EQUAL_STRING("\0", test_buf);
+}
+
 
 void safe_state(void)
 {
