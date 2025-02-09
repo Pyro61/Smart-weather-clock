@@ -16,7 +16,6 @@ set(TEST_INCLUDE_DIRS
 )
 
 set(SRCS
-	${SRC_PATH}/safe_state/safe_state.c
 	${SRC_PATH}/main_state_machine/state_mode_selection/state_mode_selection.c
 )
 
@@ -26,6 +25,7 @@ set(TEST_SRCS
 	${TEST_NAME}_test_main.c
 	${TEST_NAME}_test_runner.c
 	mode_selection_test.c
+	display_mock.c
 )
 
 set(GLOBAL_DEFINES
