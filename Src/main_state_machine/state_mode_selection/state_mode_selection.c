@@ -51,8 +51,9 @@ static void mode_selection_init(struct display_interface *funs)
 }
 
 
-static void mode_selection_on_entry(void)
+static void mode_selection_on_entry(enum state_status last_state)
 {
+    (void)last_state; /* Unused */
     selected_mode = 1;
     prepare_buf(selected_mode);
     display.print(buf);

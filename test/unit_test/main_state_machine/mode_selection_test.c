@@ -22,6 +22,7 @@
 
 typedef const struct main_state_interface * (*main_state_get_t)(void);
 static const main_state_get_t (mode_selection_funs) = main_state_mode_selection_get;
+static enum state_status last_state; /* Unused, only for compilation purposes */
 
 
 char test_buf[80];
@@ -202,7 +203,7 @@ static void init_state(void)
 
 static void entry_state(void)
 {
-    mode_selection_funs() -> on_entry();
+    mode_selection_funs() -> on_entry(last_state);
     display_mock_read_buf(test_buf);
 }
 
