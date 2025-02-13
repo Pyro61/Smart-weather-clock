@@ -2,6 +2,8 @@
 
 #include "stdint.h"
 
+typedef void (*cb_t)(void);
+
 typedef int32_t temp_Cdeg_t;
 typedef int32_t pressure_hPa_t;
 typedef int32_t humidity_percent_t;
@@ -19,4 +21,15 @@ struct weather_data
 	pressure_hPa_t pressure;
 	humidity_percent_t humidity;
 	enum rain_state is_raining;
+};
+
+typedef uint32_t hour_t;
+typedef uint32_t minute_t;
+typedef uint32_t second_t;
+
+struct time
+{
+	hour_t hours;
+	minute_t minutes;
+	second_t seconds;
 };
