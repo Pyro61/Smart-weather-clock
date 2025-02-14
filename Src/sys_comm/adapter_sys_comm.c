@@ -3,6 +3,7 @@
 #include "../events/events.h"
 #include "sys_comm_send_recv.h"
 #include <stdint.h>
+#include <string.h>
 
 
 /* Data Buffers */
@@ -87,4 +88,10 @@ void adapter_sys_comm_send_req_get_data(void)
 
     /* Send req */
     hw.send(send_buf, len); 
+}
+
+
+void adapter_sys_comm_copy_data(uint8_t *dest_buf)
+{
+    memcpy((void*)dest_buf, (const void*)&recv_buf[SYS_COMM_DATA_START_IDX], SYS_COMM_DATA_SIZE);
 }
