@@ -25,6 +25,7 @@ static enum state_status press_ok_mode_button(void);
 static void press_up_button(void);
 static void press_down_button(void);
 static void press_left_button(void);
+static void press_right_button(void);
 static void refresh(void);
 
 
@@ -79,6 +80,15 @@ TEST(set_time, WhenEditingHourTensPressLeftButtonAfterThatRefreshThenEditingTime
 }
 
 
+TEST(set_time, WhenEditingHourTensPressRightButtonAfterThatRefreshThenEditingTimeIsHourUnits)
+{
+    entry_state();
+    press_right_button();
+    refresh();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      0 :00:00      ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
@@ -129,6 +139,12 @@ static void press_down_button(void)
 static void press_left_button(void)
 {
     state_set_time_funs() -> on_left_button_pressed();
+}
+
+
+static void press_right_button(void)
+{
+    state_set_time_funs() -> on_right_button_pressed();
 }
 
 
