@@ -16,7 +16,6 @@ static const main_state_get_t states[STATE_MAX] =
 };
 
 
-
 static void state_change_if_needed(enum state_status status)
 {
     /* Greater values than STATE_UNCHANGED are corresponding to state change */
@@ -24,7 +23,12 @@ static void state_change_if_needed(enum state_status status)
     {
         /* Entry and exit functions must never require another change of state */
         states[current_state]() -> on_exit();
-        last_state = current_state;
+        /* Preventing the last state from being assigned as mode selection (Come back directly to last mode before changing bypassing mode selection) */
+        if (current_state != MODE_SELECTION)
+        {
+            last_state = current_state;
+        }
+        
         current_state = status;
         states[current_state]() -> on_entry(last_state);
     }
