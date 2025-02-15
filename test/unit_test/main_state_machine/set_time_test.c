@@ -52,6 +52,14 @@ TEST(set_time, OnEntryDisplayOutput)
 }
 
 
+TEST(set_time, OnExitDisplayOutput)
+{
+    entry_state();
+    exit_state();
+    TEST_ASSERT_EQUAL_STRING(CLEARED_MESSAGE, test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
