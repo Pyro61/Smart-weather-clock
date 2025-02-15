@@ -40,7 +40,7 @@ static const uint8_t set_time_parts_buf_positions[SET_TIME_PARTS] = {27, 28, 30,
 static uint8_t edited_time_part = SET_TIME_HOUR_TENS;
 
 /* Last state holder */
-static enum main_state return_state;
+static enum state_status return_state;
 
 /* Time data holder */
 static struct time time;
