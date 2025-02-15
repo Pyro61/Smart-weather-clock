@@ -23,4 +23,5 @@ TEST_GROUP_RUNNER(set_time)
    RUN_TEST_CASE(set_time, OnEntryDisplayOutput);
    RUN_TEST_CASE(set_time, OnEntryDisplayOutput);
    RUN_TEST_CASE(set_time, PressedOkButtonReturnedStateIsTheSameAsGivenToStateEntry);
+   RUN_TEST_CASE(set_time, WhenEditingHourTensPressLeftButtonAfterThatRefreshThenEditingTimeIsStillHourTens);
 }

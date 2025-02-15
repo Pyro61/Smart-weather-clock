@@ -24,6 +24,7 @@ static void exit_state(void);
 static enum state_status press_ok_mode_button(void);
 static void press_up_button(void);
 static void press_down_button(void);
+static void press_left_button(void);
 static void refresh(void);
 
 
@@ -66,6 +67,15 @@ TEST(set_time, PressedOkButtonReturnedStateIsTheSameAsGivenToStateEntry)
     entry_state();
     enum state_status returned_state = press_ok_mode_button();
     TEST_ASSERT_EQUAL(last_state, returned_state);
+}
+
+
+TEST(set_time, WhenEditingHourTensPressLeftButtonAfterThatRefreshThenEditingTimeIsStillHourTens)
+{
+    entry_state();
+    press_left_button();
+    refresh();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n       0:00:00      ", test_buf);
 }
 
 
@@ -113,6 +123,12 @@ static void press_down_button(void)
 {
     state_set_time_funs() -> on_down_button_pressed();
     display_mock_read_buf(test_buf);
+}
+
+
+static void press_left_button(void)
+{
+    state_set_time_funs() -> on_left_button_pressed();
 }
 
 
