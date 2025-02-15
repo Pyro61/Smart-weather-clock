@@ -60,6 +60,15 @@ TEST(set_time, OnExitDisplayOutput)
 }
 
 
+TEST(set_time, PressedOkButtonReturnedStateIsTheSameAsGivenToStateEntry)
+{
+    last_state = WEATHER_OUT;
+    entry_state();
+    enum state_status returned_state = press_ok_mode_button();
+    TEST_ASSERT_EQUAL(last_state, returned_state);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
