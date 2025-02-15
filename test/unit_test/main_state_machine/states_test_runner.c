@@ -17,3 +17,8 @@ TEST_GROUP_RUNNER(mode_selection)
    RUN_TEST_CASE(mode_selection, AfterRefreshChangedSelectedModeThenThereIsSelectedModeSign);
    RUN_TEST_CASE(mode_selection, AfterRefreshChangedSelectedModeAfterThatRefreshThenThereIsNoSelectedSign);
 }
+
+TEST_GROUP_RUNNER(set_time)
+{
+   RUN_TEST_CASE(set_time, FirstTest);
+}
