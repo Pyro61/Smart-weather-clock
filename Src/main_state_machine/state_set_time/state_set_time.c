@@ -13,12 +13,12 @@
 #define BUFFER_MAX_SIZE                 80
 
 /* Time parts */
-#define SET_TIME_HOUR_TENS              1
-#define SET_TIME_HOUR_UNITS             2
-#define SET_TIME_MINUTE_TENS            3
-#define SET_TIME_MINUTE_UNITS           4
-#define SET_TIME_SECOND_TENS            5
-#define SET_TIME_SECOND_UNITS           6
+#define SET_TIME_HOUR_TENS              0
+#define SET_TIME_HOUR_UNITS             1
+#define SET_TIME_MINUTE_TENS            2
+#define SET_TIME_MINUTE_UNITS           3
+#define SET_TIME_SECOND_TENS            4
+#define SET_TIME_SECOND_UNITS           5
 #define SET_TIME_PARTS                  6
 
 
@@ -261,7 +261,7 @@ static uint32_t get_time_part_value(uint8_t time_part)
 
 static bool check_time_set_position(uint8_t next_position)
 {
-    if ((next_position > 0) && (next_position <= SET_TIME_PARTS))
+    if ((next_position >= 0) && (next_position < SET_TIME_PARTS))
     {
         return true;
     }
