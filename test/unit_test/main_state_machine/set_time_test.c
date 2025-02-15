@@ -45,9 +45,10 @@ TEST_TEAR_DOWN(set_time)
 }
 
 
-TEST(set_time, FirstTest)
+TEST(set_time, OnEntryDisplayOutput)
 {
-    TEST_FAIL();
+    entry_state();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:00      ", test_buf);
 }
 
 

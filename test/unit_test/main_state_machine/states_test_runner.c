@@ -20,5 +20,5 @@ TEST_GROUP_RUNNER(mode_selection)
 
 TEST_GROUP_RUNNER(set_time)
 {
-   RUN_TEST_CASE(set_time, FirstTest);
+   RUN_TEST_CASE(set_time, OnEntryDisplayOutput);
 }
