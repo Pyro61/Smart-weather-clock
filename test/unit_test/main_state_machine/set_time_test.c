@@ -104,6 +104,22 @@ TEST(set_time, WhenEditingSecondTensPressLeftButtonAfterThatRefreshThenEditingTi
 }
 
 
+TEST(set_time, WhenEditingSecondUnitsPressRightButtonAfterThatRefreshThenEditingTimeIsStillSecondUnits)
+{
+    uint8_t i;
+    entry_state();
+    /* Press right button 5 times to start editing second units */
+    for (i = 0; i < 5; i++)
+    {
+        press_right_button();
+    }
+    /* Press right button one more time */
+    press_right_button();
+    refresh();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:0       ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
