@@ -209,6 +209,33 @@ TEST(set_time, WhenTimeIsSetTo23_00_00AndEditingPartIsHourUnitsPressUpButtonThen
 }
 
 
+TEST(set_time, WhenTimeIsSetTo00_00_19AndEditingPartIsSecondUnitsRefresh4TimesAndTimeIsTheSame)
+{
+    uint8_t i;
+    entry_state();
+    /* Enter editing second tens */
+    for (i = 0; i < 4; i++)
+    {
+        press_right_button();
+    }
+    /* Second tens 0 -> 1 */
+    press_up_button();
+    /* Enter editing second units */
+    press_right_button();
+    /* Second units 0 -> 9 */
+    for (i = 0; i < 9; i++)
+    {
+        press_up_button();
+    }
+    /* Refresh 2 times */
+    for (i = 0; i < 4; i++)
+    {
+        refresh();
+    }
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:19      ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
