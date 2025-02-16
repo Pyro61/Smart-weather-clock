@@ -250,6 +250,23 @@ TEST(set_time, WhenEditingHourTensPressRightButton2TimesAfterThatLeftButton1Time
 }
 
 
+TEST(set_time, WhenTimeIsSetTo20_00_00RefreshAfterThatPressRightButtonThenDisplayShows20_00_00)
+{
+    uint8_t i;
+    entry_state();
+    /* Hour tens 0 -> 2 */
+    for (i = 0; i < 2; i++)
+    {
+        press_up_button();
+    }
+    /* Refresh */
+    refresh();
+    /* Press right button */
+    press_right_button();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      20:00:00      ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {

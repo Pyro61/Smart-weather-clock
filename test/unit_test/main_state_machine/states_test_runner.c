@@ -35,4 +35,5 @@ TEST_GROUP_RUNNER(set_time)
    RUN_TEST_CASE(set_time, WhenTimeIsSetTo23_00_00AndEditingPartIsHourUnitsPressUpButtonThenTimeDoNotChange);
    RUN_TEST_CASE(set_time, WhenTimeIsSetTo00_00_19AndEditingPartIsSecondUnitsRefresh4TimesAndTimeIsTheSame);
    RUN_TEST_CASE(set_time, WhenEditingHourTensPressRightButton2TimesAfterThatLeftButton1TimeThenEditingTimeIsHourUnits);
+   RUN_TEST_CASE(set_time, WhenTimeIsSetTo20_00_00RefreshAfterThatPressRightButtonThenDisplayShows20_00_00);
 }
