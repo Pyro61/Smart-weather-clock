@@ -155,6 +155,19 @@ TEST(set_time, WhenEditingHourTensPressUpButton3TimesThenHourTensIs2InsteadOf3)
 }
 
 
+TEST(set_time, WhenEditingHourUnitsPressUpButton10TimesThenHourIs9InsteadOf10)
+{
+    uint8_t i;
+    entry_state();
+    press_right_button();
+    for(i = 0; i < 10; i++)
+    {
+        press_up_button();
+    }
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      09:00:00      ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
