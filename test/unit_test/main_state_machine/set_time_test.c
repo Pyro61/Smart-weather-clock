@@ -236,6 +236,20 @@ TEST(set_time, WhenTimeIsSetTo00_00_19AndEditingPartIsSecondUnitsRefresh4TimesAn
 }
 
 
+TEST(set_time, WhenEditingHourTensPressRightButton2TimesAfterThatLeftButton1TimeThenEditingTimeIsHourUnits)
+{
+    entry_state();
+    /* Enter editing minute tens */
+    press_right_button();
+    press_right_button();
+    /* Enter editing hour units */
+    press_left_button();
+    /* Refresh */
+    refresh();
+    TEST_ASSERT_EQUAL_STRING(BLANK_HOUR_UNITS, test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
