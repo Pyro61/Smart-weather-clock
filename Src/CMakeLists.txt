@@ -28,6 +28,7 @@ set(C_SRCS
     main_state_machine/state_weather_out/state_weather_out.c
     main_state_machine/state_weather_in/state_weather_in.c
     main_state_machine/state_set_time/state_set_time.c
+    main_state_machine/state_set_alarm/state_set_alarm.c
     logic_init.c
 
     #External hw files
