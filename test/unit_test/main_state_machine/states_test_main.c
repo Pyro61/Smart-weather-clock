@@ -10,4 +10,5 @@ int main(int argc, const char **argv)
 static void run_all_tests(void)
 {
    RUN_TEST_GROUP(mode_selection);
+   RUN_TEST_GROUP(set_time);
 }

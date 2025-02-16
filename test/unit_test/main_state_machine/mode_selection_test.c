@@ -25,7 +25,7 @@ static const main_state_get_t (mode_selection_funs) = main_state_mode_selection_
 static enum state_status last_state; /* Unused, only for compilation purposes */
 
 
-char test_buf[80];
+static char test_buf[80];
 
 /* Helper function definitions */
 static void reset_test_buf(void);

@@ -17,3 +17,24 @@ TEST_GROUP_RUNNER(mode_selection)
    RUN_TEST_CASE(mode_selection, AfterRefreshChangedSelectedModeThenThereIsSelectedModeSign);
    RUN_TEST_CASE(mode_selection, AfterRefreshChangedSelectedModeAfterThatRefreshThenThereIsNoSelectedSign);
 }
+
+TEST_GROUP_RUNNER(set_time)
+{
+   RUN_TEST_CASE(set_time, OnEntryDisplayOutput);
+   RUN_TEST_CASE(set_time, OnEntryDisplayOutput);
+   RUN_TEST_CASE(set_time, PressedOkButtonReturnedStateIsTheSameAsGivenToStateEntry);
+   RUN_TEST_CASE(set_time, WhenEditingHourTensPressLeftButtonAfterThatRefreshThenEditingTimeIsStillHourTens);
+   RUN_TEST_CASE(set_time, WhenEditingHourTensPressRightButtonAfterThatRefreshThenEditingTimeIsHourUnits);
+   RUN_TEST_CASE(set_time, WhenEditingSecondTensPressLeftButtonAfterThatRefreshThenEditingTimeIsMinuteUnits);
+   RUN_TEST_CASE(set_time, WhenEditingSecondUnitsPressRightButtonAfterThatRefreshThenEditingTimeIsStillSecondUnits);
+   RUN_TEST_CASE(set_time, WhenEditingHourTensPressDownButtonThenHourTensIsStill0);
+   RUN_TEST_CASE(set_time, WhenEditingHourTensPressUpButtonThenHourTensIs1);
+   RUN_TEST_CASE(set_time, WhenEditingHourTensPressUpButton3TimesThenHourTensIs2InsteadOf3);
+   RUN_TEST_CASE(set_time, WhenEditingHourUnitsPressUpButton10TimesThenHourIs9InsteadOf10);
+   RUN_TEST_CASE(set_time, WhenTimeIsSetTo00_50_00AndEditingPartIsMinuteUnitsPressDownButtonTimeDoNotChange);
+   RUN_TEST_CASE(set_time, WhenTimeIsSetTo23_00_00AndEditingPartIsHourUnitsPressUpButtonThenTimeDoNotChange);
+   RUN_TEST_CASE(set_time, WhenTimeIsSetTo00_00_19AndEditingPartIsSecondUnitsRefresh4TimesAndTimeIsTheSame);
+   RUN_TEST_CASE(set_time, WhenEditingHourTensPressRightButton2TimesAfterThatLeftButton1TimeThenEditingTimeIsHourUnits);
+   RUN_TEST_CASE(set_time, WhenTimeIsSetTo20_00_00RefreshAfterThatPressRightButtonThenDisplayShows20_00_00);
+   RUN_TEST_CASE(set_time, WhenTimeIsSetTo01_00_00RefreshAfterThatPressDownButtonThenDisplayShows00_00_00);
+}
