@@ -191,16 +191,16 @@ static void prepare_buf(char *buf, struct time time)
     strncpy(buf, set_time_window_template, BUFFER_MAX_SIZE);
     /* Hours */
     uint8_t tmp = get_time_part_value(SET_TIME_HOUR_TENS);
-    modify_buffer_1_char(buf, SET_TIME_HOUR_TENS, tmp / 10);
-    modify_buffer_1_char(buf, SET_TIME_HOUR_UNITS, tmp % 10);
+    modify_buffer_1_char(buf, set_time_parts_buf_positions[SET_TIME_HOUR_TENS], (tmp / 10) + '0');
+    modify_buffer_1_char(buf, set_time_parts_buf_positions[SET_TIME_HOUR_UNITS], (tmp % 10) + '0');
     /* Minutes */
     tmp = get_time_part_value(SET_TIME_MINUTE_TENS);
-    modify_buffer_1_char(buf, SET_TIME_MINUTE_TENS, tmp / 10);
-    modify_buffer_1_char(buf, SET_TIME_MINUTE_UNITS, tmp % 10);
+    modify_buffer_1_char(buf, set_time_parts_buf_positions[SET_TIME_MINUTE_TENS], (tmp / 10) + '0');
+    modify_buffer_1_char(buf, set_time_parts_buf_positions[SET_TIME_MINUTE_UNITS], (tmp % 10) + '0');
     /* Seconds */
     tmp = get_time_part_value(SET_TIME_SECOND_TENS);
-    modify_buffer_1_char(buf, SET_TIME_SECOND_TENS, tmp / 10);
-    modify_buffer_1_char(buf, SET_TIME_SECOND_UNITS, tmp % 10);
+    modify_buffer_1_char(buf, set_time_parts_buf_positions[SET_TIME_SECOND_TENS], (tmp / 10) + '0');
+    modify_buffer_1_char(buf, set_time_parts_buf_positions[SET_TIME_SECOND_UNITS], (tmp % 10) + '0');
 }
 
 
