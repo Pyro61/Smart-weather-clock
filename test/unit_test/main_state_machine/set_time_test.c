@@ -188,6 +188,27 @@ TEST(set_time, WhenTimeIsSetTo00_50_00AndEditingPartIsMinuteUnitsPressDownButton
 }
 
 
+TEST(set_time, WhenTimeIsSetTo23_00_00AndEditingPartIsHourUnitsPressUpButtonThenTimeDoNotChange)
+{
+    uint8_t i;
+    entry_state();
+    /* Hour tens 0 -> 2 */
+    for (i = 0; i < 2; i++)
+    {
+        press_up_button();
+    }
+    /* Enter editing hour units */
+    press_right_button();
+    /* Hour units 0 -> 3 */
+    for (i = 0; i < 3; i++)
+    {
+        press_up_button();
+    }
+    /* Hour units 3 -> 3 */
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      23:00:00      ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
