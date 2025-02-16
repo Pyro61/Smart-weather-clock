@@ -89,6 +89,21 @@ TEST(set_time, WhenEditingHourTensPressRightButtonAfterThatRefreshThenEditingTim
 }
 
 
+TEST(set_time, WhenEditingSecondTensPressLeftButtonAfterThatRefreshThenEditingTimeIsMinuteUnits)
+{
+    uint8_t i;
+    entry_state();
+    /* Press right button 4 times to start editing second tens */
+    for (i = 0; i < 4; i++)
+    {
+        press_right_button();
+    }
+    press_left_button();
+    refresh();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:0 :00      ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
