@@ -49,6 +49,7 @@ static struct time time;
 /* Helper functions declarations */
 static void modify_buffer_1_char(char *buf, uint8_t position, char c);
 static void prepare_buf(char *buf, struct time time);
+static bool is_time_part_value_correct(uint8_t edited_time_part, uint32_t value);
 static void save_time_part_value(uint8_t time_part, uint32_t value);
 static uint32_t get_time_part_value(uint8_t time_part);
 static bool check_time_set_position(uint8_t next_position);
@@ -70,9 +71,17 @@ static void set_time_init(struct display_interface *funs)
 
 static void set_time_on_entry(enum state_status last_state)
 {
+    /* Save last state */
     return_state = last_state;
+    /* Reset edited time part */
     edited_time_part = SET_TIME_HOUR_TENS;
+    /* Reset time */
+    time.hours = 0;
+    time.minutes = 0;
+    time.seconds = 0;
+    /* Copy initial display output to buffer */
     strncpy(buf, set_time_window_template, BUFFER_MAX_SIZE);
+    /* Print display output */
     display.print(buf);
 }
 
@@ -114,28 +123,26 @@ static enum state_status set_time_on_left_button_pressed(void)
 
 static enum state_status set_time_on_up_button_pressed(void)
 {
-    /* Preventing against writing wrong time part value is inside save_time_part_value function */
-    uint8_t tmp;
-    if (edited_time_part % 2 == 0) tmp = 10; /* Tens */
-    else tmp = 1; /* Units */
-    save_time_part_value(edited_time_part, get_time_part_value(edited_time_part) + tmp);
-    prepare_buf(buf, time);
-    display.print(buf);
-
+    uint8_t tmp = get_time_part_value(edited_time_part);
+    if (is_time_part_value_correct(edited_time_part, tmp + 1) == true)
+    {
+        save_time_part_value(edited_time_part, tmp + 1);
+        prepare_buf(buf, time);
+        display.print(buf);
+    }
     return STATE_UNCHANGED;
 }
 
 
 static enum state_status set_time_on_down_button_pressed(void)
 {
-    /* Preventing against writing wrong time part value is inside save_time_part_value function */
-    uint8_t tmp;
-    if (edited_time_part % 2 == 0) tmp = 10; /* Tens */
-    else tmp = 1; /* Units */
-    save_time_part_value(edited_time_part, get_time_part_value(edited_time_part) - tmp);
-    prepare_buf(buf, time);
-    display.print(buf);
-
+    uint8_t tmp = get_time_part_value(edited_time_part);
+    if (is_time_part_value_correct(edited_time_part, tmp - 1) == true)
+    {
+        save_time_part_value(edited_time_part, tmp - 1);
+        prepare_buf(buf, time);
+        display.print(buf);
+    }
     return STATE_UNCHANGED;
 }
 
@@ -201,65 +208,110 @@ static void prepare_buf(char *buf, struct time time)
 }
 
 
+static bool is_time_part_value_correct(uint8_t time_part, uint32_t value)
+{
+    switch (time_part)
+    {
+        case SET_TIME_HOUR_TENS:
+        {
+            /* 2-:--:-- */
+            if (value > 2) return false;
+            else return true;
+        }
+        case SET_TIME_HOUR_UNITS:
+        {
+            /* 23:--:-- */
+            if (get_time_part_value(SET_TIME_HOUR_TENS) == 2)
+            {
+                if (value > 3) return false;
+                else return true;
+            }
+
+            /* -9:--:-- */
+            else
+            {
+                if (value > 9) return false;
+                else return true;
+            }
+        }
+        case SET_TIME_MINUTE_TENS:
+        case SET_TIME_SECOND_TENS:
+        {
+            /* --:5-:5- */
+            if (value > 5) return false;
+            else return true;
+        }
+        case SET_TIME_MINUTE_UNITS:
+        case SET_TIME_SECOND_UNITS:
+        {
+            /* --:-9:-9 */
+            if (value > 9) return false;
+            else return true;
+        }
+        default:
+        {
+            return false;
+        }   
+    }
+}
+
+
 static void save_time_part_value(uint8_t time_part, uint32_t value)
 {
-    /* Hours */
-    if ((time_part == SET_TIME_HOUR_TENS) || (time_part == SET_TIME_HOUR_UNITS))
+    switch (time_part)
     {
-        /* Check if new hours value if lesser than 24 (23:59:59 is maximum time value) */
-        if (value < 24) time.hours = (hour_t)value;
+        case SET_TIME_HOUR_TENS:
+        {
+            time.hours = get_time_part_value(SET_TIME_HOUR_UNITS) + value * 10;
+            break;
+        }
+        case SET_TIME_HOUR_UNITS:
+        {
+            time.hours = get_time_part_value(SET_TIME_HOUR_TENS) * 10 + value;
+            break;
+        }
+        case SET_TIME_MINUTE_TENS:
+        {
+            time.minutes = get_time_part_value(SET_TIME_MINUTE_UNITS) + value * 10;
+            break;
+        }
+        case SET_TIME_MINUTE_UNITS:
+        {
+            time.minutes = get_time_part_value(SET_TIME_MINUTE_TENS) * 10 + value;
+            break;
+        }
+        case SET_TIME_SECOND_TENS:
+        {
+            time.seconds = get_time_part_value(SET_TIME_SECOND_UNITS) + value * 10;
+            break;
+        }
+        case SET_TIME_SECOND_UNITS:
+        {
+            time.seconds = get_time_part_value(SET_TIME_SECOND_TENS) * 10 + value;
+            break;
+        }
     }
-
-    /* Minutes */
-    else if ((time_part == SET_TIME_MINUTE_TENS) || (time_part == SET_TIME_MINUTE_UNITS))
-    {
-        /* Check if new minutes value if lesser than 60 (23:59:59 is maximum time value) */
-        if (value < 60) time.minutes = (minute_t)value;
-    }
-
-    /* Seconds */
-    else if ((time_part == SET_TIME_SECOND_TENS) || (time_part == SET_TIME_SECOND_UNITS))
-    {
-        /* Check if new seconds value if lesser than 60 (23:59:59 is maximum time value) */
-        if (value < 60) time.seconds = (second_t)value;
-    }
-
-    /* Wrong time part, do nothing */
-    else {}
 }
 
 
 static uint32_t get_time_part_value(uint8_t time_part)
 {
-    /* Hours */
-    if ((time_part == SET_TIME_HOUR_TENS) || (time_part == SET_TIME_HOUR_UNITS))
+    switch (time_part)
     {
-        return (uint32_t)time.hours;
-    }
-
-    /* Minutes */
-    else if ((time_part == SET_TIME_MINUTE_TENS) || (time_part == SET_TIME_MINUTE_UNITS))
-    {
-        return (uint32_t)time.minutes;
-    }
-
-    /* Seconds */
-    else if ((time_part == SET_TIME_SECOND_TENS) || (time_part == SET_TIME_SECOND_UNITS))
-    {
-        return (uint32_t)time.seconds;
-    }
-
-    /* Wrong time part, return wrong value */
-    else
-    {
-        return (uint32_t)-1;
+        case SET_TIME_HOUR_TENS: return (uint32_t)(time.hours / 10);
+        case SET_TIME_HOUR_UNITS: return (uint32_t)(time.hours % 10);
+        case SET_TIME_MINUTE_TENS: return (uint32_t)(time.minutes / 10);
+        case SET_TIME_MINUTE_UNITS: return (uint32_t)(time.minutes % 10);
+        case SET_TIME_SECOND_TENS: return (uint32_t)(time.seconds / 10);
+        case SET_TIME_SECOND_UNITS: return (uint32_t)(time.seconds % 10);
+        default: return (uint32_t)-1;
     }
 }
 
 
 static bool check_time_set_position(uint8_t next_position)
 {
-    if ((next_position >= 0) && (next_position < SET_TIME_PARTS))
+    if (next_position < SET_TIME_PARTS)
     {
         return true;
     }
