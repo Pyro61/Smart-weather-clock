@@ -27,4 +27,5 @@ TEST_GROUP_RUNNER(set_time)
    RUN_TEST_CASE(set_time, WhenEditingHourTensPressRightButtonAfterThatRefreshThenEditingTimeIsHourUnits);
    RUN_TEST_CASE(set_time, WhenEditingSecondTensPressLeftButtonAfterThatRefreshThenEditingTimeIsMinuteUnits);
    RUN_TEST_CASE(set_time, WhenEditingSecondUnitsPressRightButtonAfterThatRefreshThenEditingTimeIsStillSecondUnits);
+   RUN_TEST_CASE(set_time, WhenEditingHourTensPressDownButtonThenHourTensIsStill0);
 }

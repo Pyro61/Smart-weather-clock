@@ -120,6 +120,14 @@ TEST(set_time, WhenEditingSecondUnitsPressRightButtonAfterThatRefreshThenEditing
 }
 
 
+TEST(set_time, WhenEditingHourTensPressDownButtonThenHourTensIsStill0)
+{
+    entry_state();
+    press_down_button();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:00      ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
