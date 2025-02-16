@@ -134,6 +134,13 @@ TEST(set_time, WhenEditingHourTensPressDownButtonThenHourTensIsStill0)
     TEST_ASSERT_EQUAL_STRING(ENTRY_MESSAGE, test_buf);
 }
 
+TEST(set_time, WhenEditingHourTensPressUpButtonThenHourTensIs1)
+{
+    entry_state();
+    press_up_button();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      10:00:00      ", test_buf);
+}
+
 
 /* Helper functions */
 static void reset_test_buf(void)
