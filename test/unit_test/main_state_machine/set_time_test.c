@@ -8,6 +8,13 @@
 
 /* Messages showed by display */
 #define CLEARED_MESSAGE             "\0"
+#define ENTRY_MESSAGE               "      HH:MM:SS      \n      00:00:00      "
+#define BLANK_HOUR_TENS             "      HH:MM:SS      \n       0:00:00      "
+#define BLANK_HOUR_UNITS            "      HH:MM:SS      \n      0 :00:00      "
+#define BLANK_MINUTE_TENS           "      HH:MM:SS      \n      00: 0:00      "
+#define BLANK_MINUTE_UNITS          "      HH:MM:SS      \n      00:0 :00      "
+#define BLANK_SECOND_TENS           "      HH:MM:SS      \n      00:00: 0      "
+#define BLANK_SECOND_UNITS          "      HH:MM:SS      \n      00:00:0       "
 
 
 typedef const struct main_state_interface * (*main_state_get_t)(void);
@@ -50,7 +57,7 @@ TEST_TEAR_DOWN(set_time)
 TEST(set_time, OnEntryDisplayOutput)
 {
     entry_state();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING(ENTRY_MESSAGE, test_buf);
 }
 
 
@@ -76,7 +83,7 @@ TEST(set_time, WhenEditingHourTensPressLeftButtonAfterThatRefreshThenEditingTime
     entry_state();
     press_left_button();
     refresh();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n       0:00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING(BLANK_HOUR_TENS, test_buf);
 }
 
 
@@ -85,7 +92,7 @@ TEST(set_time, WhenEditingHourTensPressRightButtonAfterThatRefreshThenEditingTim
     entry_state();
     press_right_button();
     refresh();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      0 :00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING(BLANK_HOUR_UNITS, test_buf);
 }
 
 
@@ -100,7 +107,7 @@ TEST(set_time, WhenEditingSecondTensPressLeftButtonAfterThatRefreshThenEditingTi
     }
     press_left_button();
     refresh();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:0 :00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING(BLANK_MINUTE_UNITS, test_buf);
 }
 
 
@@ -116,7 +123,7 @@ TEST(set_time, WhenEditingSecondUnitsPressRightButtonAfterThatRefreshThenEditing
     /* Press right button one more time */
     press_right_button();
     refresh();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:0       ", test_buf);
+    TEST_ASSERT_EQUAL_STRING(BLANK_SECOND_UNITS, test_buf);
 }
 
 
@@ -124,7 +131,7 @@ TEST(set_time, WhenEditingHourTensPressDownButtonThenHourTensIsStill0)
 {
     entry_state();
     press_down_button();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING(ENTRY_MESSAGE, test_buf);
 }
 
 
