@@ -317,12 +317,14 @@ static void press_down_button(void)
 static void press_left_button(void)
 {
     state_set_time_funs() -> on_left_button_pressed();
+    display_mock_read_buf(test_buf);
 }
 
 
 static void press_right_button(void)
 {
     state_set_time_funs() -> on_right_button_pressed();
+    display_mock_read_buf(test_buf);
 }
 
 
