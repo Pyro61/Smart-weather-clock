@@ -267,6 +267,21 @@ TEST(set_time, WhenTimeIsSetTo20_00_00RefreshAfterThatPressRightButtonThenDispla
 }
 
 
+TEST(set_time, WhenTimeIsSetTo01_00_00RefreshAfterThatPressDownButtonThenDisplayShows00_00_00)
+{
+    entry_state();
+    /* Enter editing hour units */
+    press_right_button();
+    /* Hour units 0 -> 1 */
+    press_up_button();
+    /* Refresh */
+    refresh();
+    /* Hour units 1 -> 0 */
+    press_down_button();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:00      ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
