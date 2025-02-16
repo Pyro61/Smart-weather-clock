@@ -5,7 +5,7 @@ bool is_alarm_set(void)
     return false;
 }
 
-void set_alarm(struct time time)
+void alarm_set(struct time time)
 {
 
 }
