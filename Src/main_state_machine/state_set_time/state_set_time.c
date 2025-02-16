@@ -116,8 +116,8 @@ static enum state_status set_time_on_up_button_pressed(void)
 {
     /* Preventing against writing wrong time part value is inside save_time_part_value function */
     uint8_t tmp;
-    if (edited_time_part % 2 == 1) tmp = 10; /* Tens */
-    else tmp = 0; /* Units */
+    if (edited_time_part % 2 == 0) tmp = 10; /* Tens */
+    else tmp = 1; /* Units */
     save_time_part_value(edited_time_part, get_time_part_value(edited_time_part) + tmp);
     prepare_buf(buf, time);
     display.print(buf);
@@ -130,8 +130,8 @@ static enum state_status set_time_on_down_button_pressed(void)
 {
     /* Preventing against writing wrong time part value is inside save_time_part_value function */
     uint8_t tmp;
-    if (edited_time_part % 2 == 1) tmp = 10; /* Tens */
-    else tmp = 0; /* Units */
+    if (edited_time_part % 2 == 0) tmp = 10; /* Tens */
+    else tmp = 1; /* Units */
     save_time_part_value(edited_time_part, get_time_part_value(edited_time_part) - tmp);
     prepare_buf(buf, time);
     display.print(buf);
@@ -286,7 +286,7 @@ static void blink_edited_time_part(char *buf, uint8_t edited_time_part)
     else if (buf[position] == BLANK_SIGN)
     {
         uint32_t value = get_time_part_value(edited_time_part);
-        if (value % 2 == 1) tmp = (value / 10) + '0'; /* Tens */
+        if (value % 2 == 0) tmp = (value / 10) + '0'; /* Tens */
         else tmp = (value % 10) + '0'; /* Units */
     }
 
