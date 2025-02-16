@@ -168,6 +168,26 @@ TEST(set_time, WhenEditingHourUnitsPressUpButton10TimesThenHourIs9InsteadOf10)
 }
 
 
+TEST(set_time, WhenTimeIsSetTo00_50_00AndEditingPartIsMinuteUnitsPressDownButtonTimeDoNotChange)
+{
+    uint8_t i;
+    entry_state();
+    /* Enter editing minute tens */
+    press_right_button();
+    press_right_button();
+    /* Set minute tens to 5 */
+    for (i = 0; i < 5; i++)
+    {
+        press_up_button();
+    }
+    /* Enter editing minute units */
+    press_right_button();
+    /* Minute units 0 -> 0 */
+    press_down_button();
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:50:00      ", test_buf);
+}
+
+
 /* Helper functions */
 static void reset_test_buf(void)
 {
