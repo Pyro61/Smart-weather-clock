@@ -59,3 +59,8 @@ TEST_GROUP_RUNNER(set_alarm)
    RUN_TEST_CASE(set_alarm, WhenTimeIsSetTo20_00_00RefreshAfterThatPressRightButtonThenDisplayShows20_00_00);
    RUN_TEST_CASE(set_alarm, WhenTimeIsSetTo01_00_00RefreshAfterThatPressDownButtonThenDisplayShows00_00_00);
 }
+
+TEST_GROUP_RUNNER(alarm)
+{
+   RUN_TEST_CASE(alarm, FailTest);
+}

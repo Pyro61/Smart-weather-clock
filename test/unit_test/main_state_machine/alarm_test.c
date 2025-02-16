@@ -1,0 +1,107 @@
+#include "unity/fixture/unity_fixture.h"
+#include "assert.h"
+#include "../Src/main_state_machine/state.h"
+#include "../Src/main_state_machine/state_alarm/state_alarm.h"
+#include "display_mock.h"
+#include <string.h>
+
+
+/* Messages showed by display */
+#define CLEARED_MESSAGE             "\0"
+
+typedef const struct main_state_interface * (*main_state_get_t)(void);
+static const main_state_get_t (mode_selection_funs) = main_state_alarm_get;
+static enum state_status return_state;
+
+
+static char test_buf[80];
+
+/* Helper function definitions */
+static void reset_test_buf(void);
+static void init_state(void);
+static void entry_state(void);
+static void exit_state(void);
+static enum state_status press_ok_mode_button(void);
+static void press_up_button(void);
+static void press_down_button(void);
+static void refresh(void);
+
+
+TEST_GROUP(alarm);
+
+TEST_SETUP(alarm)
+{
+    /* Init before every test */
+    /* Call state init and reset buffers */
+    init_state();
+    display_mock_reset_buf();
+    reset_test_buf();
+}
+
+
+TEST_TEAR_DOWN(alarm)
+{
+    /* Cleanup after every test */
+}
+
+
+TEST(alarm, FailTest)
+{
+    TEST_FAIL();
+}
+
+
+
+
+/* Helper functions */
+static void reset_test_buf(void)
+{
+    memset(test_buf, 0, 80);
+}
+
+
+static void init_state(void)
+{
+    main_state_alarm_get() -> init(get_display_mock_funs());
+}
+
+
+static void entry_state(void)
+{
+    main_state_alarm_get() -> on_entry(return_state);
+    display_mock_read_buf(test_buf);
+}
+
+
+static void exit_state(void)
+{
+    main_state_alarm_get() -> on_exit();
+    display_mock_read_buf(test_buf);
+}
+
+
+static enum state_status press_ok_mode_button(void)
+{
+    return main_state_alarm_get() -> on_ok_mode_button_pressed();
+}
+
+
+static void press_up_button(void)
+{
+    main_state_alarm_get() -> on_up_button_pressed();
+    display_mock_read_buf(test_buf);
+}
+
+
+static void press_down_button(void)
+{
+    main_state_alarm_get() -> on_down_button_pressed();
+    display_mock_read_buf(test_buf);
+}
+
+
+static void refresh(void)
+{
+    main_state_alarm_get() -> on_refresh();
+    display_mock_read_buf(test_buf);
+}
