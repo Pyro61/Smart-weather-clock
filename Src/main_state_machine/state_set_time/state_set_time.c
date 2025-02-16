@@ -37,7 +37,7 @@ static struct display_interface display;
 static const uint8_t set_time_parts_buf_positions[SET_TIME_PARTS] = {27, 28, 30, 31, 33, 34};
 
 /* Currently edited time part */
-static uint8_t edited_time_part = SET_TIME_HOUR_TENS;
+static uint8_t edited_time_part;
 
 /* Last state holder */
 static enum state_status return_state;
@@ -71,6 +71,7 @@ static void set_time_init(struct display_interface *funs)
 static void set_time_on_entry(enum state_status last_state)
 {
     return_state = last_state;
+    edited_time_part = SET_TIME_HOUR_TENS;
     strncpy(buf, set_time_window_template, BUFFER_MAX_SIZE);
     display.print(buf);
 }
