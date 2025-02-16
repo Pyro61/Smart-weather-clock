@@ -104,6 +104,8 @@ static enum state_status set_time_on_right_button_pressed(void)
     if (check_time_set_position(edited_time_part + 1) == true)
     {
         edited_time_part++;
+        prepare_buf(buf, time);
+        display.print(buf);
     }
 
     return STATE_UNCHANGED;
@@ -115,6 +117,8 @@ static enum state_status set_time_on_left_button_pressed(void)
     if (check_time_set_position(edited_time_part - 1) == true)
     {
         edited_time_part--;
+        prepare_buf(buf, time);
+        display.print(buf);
     }
 
     return STATE_UNCHANGED;
