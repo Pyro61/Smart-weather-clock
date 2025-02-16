@@ -24,7 +24,8 @@
 
 /* Display window template */
 static const char set_time_window_template[BUFFER_MAX_SIZE] = 
-"      HH:MM:SS      \n\
+"      SET TIME      \n\
+      HH:MM:SS      \n\
       00:00:00      ";
 
 /* Display buffer */
@@ -34,7 +35,7 @@ static char buf[BUFFER_MAX_SIZE];
 static struct display_interface display;
 
 /* Time parts buffer positions */
-static const uint8_t set_time_parts_buf_positions[SET_TIME_PARTS] = {27, 28, 30, 31, 33, 34};
+static const uint8_t set_time_parts_buf_positions[SET_TIME_PARTS] = {48, 49, 51, 52, 54, 55};
 
 /* Currently edited time part */
 static uint8_t edited_time_part;

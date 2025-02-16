@@ -8,13 +8,13 @@
 
 /* Messages showed by display */
 #define CLEARED_MESSAGE             "\0"
-#define ENTRY_MESSAGE               "      HH:MM:SS      \n      00:00:00      "
-#define BLANK_HOUR_TENS             "      HH:MM:SS      \n       0:00:00      "
-#define BLANK_HOUR_UNITS            "      HH:MM:SS      \n      0 :00:00      "
-#define BLANK_MINUTE_TENS           "      HH:MM:SS      \n      00: 0:00      "
-#define BLANK_MINUTE_UNITS          "      HH:MM:SS      \n      00:0 :00      "
-#define BLANK_SECOND_TENS           "      HH:MM:SS      \n      00:00: 0      "
-#define BLANK_SECOND_UNITS          "      HH:MM:SS      \n      00:00:0       "
+#define ENTRY_MESSAGE               "      SET TIME      \n      HH:MM:SS      \n      00:00:00      "
+#define BLANK_HOUR_TENS             "      SET TIME      \n      HH:MM:SS      \n       0:00:00      "
+#define BLANK_HOUR_UNITS            "      SET TIME      \n      HH:MM:SS      \n      0 :00:00      "
+#define BLANK_MINUTE_TENS           "      SET TIME      \n      HH:MM:SS      \n      00: 0:00      "
+#define BLANK_MINUTE_UNITS          "      SET TIME      \n      HH:MM:SS      \n      00:0 :00      "
+#define BLANK_SECOND_TENS           "      SET TIME      \n      HH:MM:SS      \n      00:00: 0      "
+#define BLANK_SECOND_UNITS          "      SET TIME      \n      HH:MM:SS      \n      00:00:0       "
 
 
 typedef const struct main_state_interface * (*main_state_get_t)(void);
@@ -139,7 +139,7 @@ TEST(set_time, WhenEditingHourTensPressUpButtonThenHourTensIs1)
 {
     entry_state();
     press_up_button();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      10:00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING("      SET TIME      \n      HH:MM:SS      \n      10:00:00      ", test_buf);
 }
 
 
@@ -151,7 +151,7 @@ TEST(set_time, WhenEditingHourTensPressUpButton3TimesThenHourTensIs2InsteadOf3)
     {
         press_up_button();
     }
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      20:00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING("      SET TIME      \n      HH:MM:SS      \n      20:00:00      ", test_buf);
 }
 
 
@@ -164,7 +164,7 @@ TEST(set_time, WhenEditingHourUnitsPressUpButton10TimesThenHourIs9InsteadOf10)
     {
         press_up_button();
     }
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      09:00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING("      SET TIME      \n      HH:MM:SS      \n      09:00:00      ", test_buf);
 }
 
 
@@ -184,7 +184,7 @@ TEST(set_time, WhenTimeIsSetTo00_50_00AndEditingPartIsMinuteUnitsPressDownButton
     press_right_button();
     /* Minute units 0 -> 0 */
     press_down_button();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:50:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING("      SET TIME      \n      HH:MM:SS      \n      00:50:00      ", test_buf);
 }
 
 
@@ -205,7 +205,7 @@ TEST(set_time, WhenTimeIsSetTo23_00_00AndEditingPartIsHourUnitsPressUpButtonThen
         press_up_button();
     }
     /* Hour units 3 -> 3 */
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      23:00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING("      SET TIME      \n      HH:MM:SS      \n      23:00:00      ", test_buf);
 }
 
 
@@ -232,7 +232,7 @@ TEST(set_time, WhenTimeIsSetTo00_00_19AndEditingPartIsSecondUnitsRefresh4TimesAn
     {
         refresh();
     }
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:19      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING("      SET TIME      \n      HH:MM:SS      \n      00:00:19      ", test_buf);
 }
 
 
@@ -263,7 +263,7 @@ TEST(set_time, WhenTimeIsSetTo20_00_00RefreshAfterThatPressRightButtonThenDispla
     refresh();
     /* Press right button */
     press_right_button();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      20:00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING("      SET TIME      \n      HH:MM:SS      \n      20:00:00      ", test_buf);
 }
 
 
@@ -278,7 +278,7 @@ TEST(set_time, WhenTimeIsSetTo01_00_00RefreshAfterThatPressDownButtonThenDisplay
     refresh();
     /* Hour units 1 -> 0 */
     press_down_button();
-    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      00:00:00      ", test_buf);
+    TEST_ASSERT_EQUAL_STRING("      SET TIME      \n      HH:MM:SS      \n      00:00:00      ", test_buf);
 }
 
 
