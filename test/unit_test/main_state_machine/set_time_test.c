@@ -134,11 +134,24 @@ TEST(set_time, WhenEditingHourTensPressDownButtonThenHourTensIsStill0)
     TEST_ASSERT_EQUAL_STRING(ENTRY_MESSAGE, test_buf);
 }
 
+
 TEST(set_time, WhenEditingHourTensPressUpButtonThenHourTensIs1)
 {
     entry_state();
     press_up_button();
     TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      10:00:00      ", test_buf);
+}
+
+
+TEST(set_time, WhenEditingHourTensPressUpButton3TimesThenHourTensIs2InsteadOf3)
+{
+    uint8_t i;
+    entry_state();
+    for(i = 0; i < 3; i++)
+    {
+        press_up_button();
+    }
+    TEST_ASSERT_EQUAL_STRING("      HH:MM:SS      \n      20:00:00      ", test_buf);
 }
 
 
