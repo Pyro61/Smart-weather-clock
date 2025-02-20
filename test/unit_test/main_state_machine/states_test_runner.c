@@ -64,4 +64,5 @@ TEST_GROUP_RUNNER(alarm)
 {
    RUN_TEST_CASE(alarm, OnEntryDisplayOutput);
    RUN_TEST_CASE(alarm, OnExitDisplayOutput);
+   RUN_TEST_CASE(alarm, PressedOkButtonReturnedStateIsTheSameAsGivenToStateEntry);
 }

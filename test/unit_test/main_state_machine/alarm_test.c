@@ -60,6 +60,15 @@ TEST(alarm, OnExitDisplayOutput)
 }
 
 
+TEST(alarm, PressedOkButtonReturnedStateIsTheSameAsGivenToStateEntry)
+{
+    return_state = WEATHER_OUT;
+    entry_state();
+    enum state_status state = press_ok_mode_button();
+    TEST_ASSERT_EQUAL(return_state, state);
+}
+
+
 
 
 /* Helper functions */
