@@ -3,6 +3,7 @@
 #include "../Src/main_state_machine/state.h"
 #include "../Src/main_state_machine/state_alarm/state_alarm.h"
 #include "display_mock.h"
+#include "time_mock.h"
 #include <string.h>
 
 
@@ -66,6 +67,15 @@ TEST(alarm, PressedOkButtonReturnedStateIsTheSameAsGivenToStateEntry)
     entry_state();
     enum state_status state = press_ok_mode_button();
     TEST_ASSERT_EQUAL(return_state, state);
+}
+
+
+TEST(alarm, WriteTimeThenEntryAlarmStateTimeShownOnDisplayIsTheSameAsWritten)
+{
+    struct time example_time = {10, 57, 4};
+    time_set(example_time);
+    entry_state();
+    TEST_ASSERT_EQUAL_STRING("\n        ALARM\n      10:57:04", test_buf);
 }
 
 
