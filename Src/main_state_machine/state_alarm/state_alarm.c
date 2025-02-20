@@ -17,16 +17,16 @@
 #define ERROR_SIGN                 '-'
 
 /* Alarm time parts */
-#define BUF_POSITION_HOUR_TENS          22
-#define BUF_POSITION_HOUR_UNITS         23
-#define BUF_POSITION_MINUTE_TENS        25
-#define BUF_POSITION_MINUTE_UNITS       26
-#define BUF_POSITION_SECOND_TENS        28
-#define BUF_POSITION_SECOND_UNITS       29
+#define BUF_POSITION_HOUR_TENS          21
+#define BUF_POSITION_HOUR_UNITS         22
+#define BUF_POSITION_MINUTE_TENS        24
+#define BUF_POSITION_MINUTE_UNITS       25
+#define BUF_POSITION_SECOND_TENS        27
+#define BUF_POSITION_SECOND_UNITS       28
 
 /* Display window template */
 static const char alarm_window_template[BUFFER_MAX_SIZE] = 
-"/n\
+"\n\
         ALARM\n\
       hh:mm:ss";
 
@@ -181,16 +181,16 @@ static void write_time_to_buf(char *buf, struct time time)
         modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
         /* Minute tens */
         tmp = time.minutes / 10;
-        modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
+        modify_buffer_1_char(buf, BUF_POSITION_MINUTE_TENS, tmp + '0');
         /* Minute units */
         tmp = time.minutes % 10;
-        modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
+        modify_buffer_1_char(buf, BUF_POSITION_MINUTE_UNITS, tmp + '0');
         /* Second tens */
         tmp = time.seconds / 10;
-        modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
+        modify_buffer_1_char(buf, BUF_POSITION_SECOND_TENS, tmp + '0');
         /* Second units */
         tmp = time.seconds % 10;
-        modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
+        modify_buffer_1_char(buf, BUF_POSITION_SECOND_UNITS, tmp + '0');
     }
 
     else
