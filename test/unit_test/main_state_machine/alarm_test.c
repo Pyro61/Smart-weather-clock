@@ -52,6 +52,14 @@ TEST(alarm, OnEntryDisplayOutput)
 }
 
 
+TEST(alarm, OnExitDisplayOutput)
+{
+    entry_state();
+    exit_state();
+    TEST_ASSERT_EQUAL_STRING("\0", test_buf);
+}
+
+
 
 
 /* Helper functions */

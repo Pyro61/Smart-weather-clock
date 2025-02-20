@@ -63,4 +63,5 @@ TEST_GROUP_RUNNER(set_alarm)
 TEST_GROUP_RUNNER(alarm)
 {
    RUN_TEST_CASE(alarm, OnEntryDisplayOutput);
+   RUN_TEST_CASE(alarm, OnExitDisplayOutput);
 }
