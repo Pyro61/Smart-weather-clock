@@ -10,7 +10,7 @@
 #define CLEARED_MESSAGE             "\0"
 
 typedef const struct main_state_interface * (*main_state_get_t)(void);
-static const main_state_get_t (mode_selection_funs) = main_state_alarm_get;
+static const main_state_get_t alarm_funs = main_state_alarm_get;
 static enum state_status return_state;
 
 
@@ -45,9 +45,10 @@ TEST_TEAR_DOWN(alarm)
 }
 
 
-TEST(alarm, FailTest)
+TEST(alarm, OnEntryDisplayOutput)
 {
-    TEST_FAIL();
+    entry_state();
+    TEST_ASSERT_EQUAL_STRING("\n        ALARM\n      00:00:00", test_buf);
 }
 
 
@@ -62,46 +63,46 @@ static void reset_test_buf(void)
 
 static void init_state(void)
 {
-    main_state_alarm_get() -> init(get_display_mock_funs());
+    alarm_funs() -> init(get_display_mock_funs());
 }
 
 
 static void entry_state(void)
 {
-    main_state_alarm_get() -> on_entry(return_state);
+    alarm_funs() -> on_entry(return_state);
     display_mock_read_buf(test_buf);
 }
 
 
 static void exit_state(void)
 {
-    main_state_alarm_get() -> on_exit();
+    alarm_funs() -> on_exit();
     display_mock_read_buf(test_buf);
 }
 
 
 static enum state_status press_ok_mode_button(void)
 {
-    return main_state_alarm_get() -> on_ok_mode_button_pressed();
+    return alarm_funs() -> on_ok_mode_button_pressed();
 }
 
 
 static void press_up_button(void)
 {
-    main_state_alarm_get() -> on_up_button_pressed();
+    alarm_funs() -> on_up_button_pressed();
     display_mock_read_buf(test_buf);
 }
 
 
 static void press_down_button(void)
 {
-    main_state_alarm_get() -> on_down_button_pressed();
+    alarm_funs() -> on_down_button_pressed();
     display_mock_read_buf(test_buf);
 }
 
 
 static void refresh(void)
 {
-    main_state_alarm_get() -> on_refresh();
+    alarm_funs() -> on_refresh();
     display_mock_read_buf(test_buf);
 }
