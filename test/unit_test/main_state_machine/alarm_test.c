@@ -79,6 +79,14 @@ TEST(alarm, WriteTimeThenEntryAlarmStateTimeShownOnDisplayIsTheSameAsWritten)
 }
 
 
+TEST(alarm, AfterRefreshAlarmStringIsGone)
+{
+    entry_state();
+    refresh();
+    TEST_ASSERT_EQUAL_STRING("\n             \n      00:00:00", test_buf);
+}
+
+
 
 
 /* Helper functions */
