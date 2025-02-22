@@ -56,7 +56,7 @@ static void blink_alarm_string(void);
 
 
 /* State functions */
-static void alarm_init(struct display_interface *funs)
+static void alarm_state_init(struct display_interface *funs)
 {
     /* Check if display functions pointers are not NULL pointers */
     if ((funs -> init == NULL) || (funs -> print == NULL) || (funs -> clear == NULL)) safe_state();
@@ -132,7 +132,7 @@ static enum state_status alarm_on_alarm(void)
 
 static const struct main_state_interface state_alarm = 
 {
-    alarm_init,
+    alarm_state_init,
     alarm_on_entry,
     alarm_on_exit,
     alarm_on_ok_mode_button_pressed,
