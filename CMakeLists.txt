@@ -19,6 +19,7 @@ add_subdirectory(test/unit_test/unity unity)
 add_subdirectory(test/unit_test/events)
 add_subdirectory(test/unit_test/weather_control)
 add_subdirectory(test/unit_test/sys_comm)
+add_subdirectory(test/unit_test/main_state_machine)
 
 #Source files
 add_subdirectory(src)

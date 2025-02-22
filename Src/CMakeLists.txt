@@ -22,9 +22,14 @@ set(C_SRCS
     sys_comm/sys_comm_send_recv.c
     sys_comm/adapter_sys_comm.c
     weather_control/weather_sensors_control.c
-    weather_meas_state_machine/state_machine.c
-    weather_meas_state_machine/state_run/state_run.c
-    weather_meas_state_machine/state_sleep/state_sleep.c
+    alarm/alarm.c
+    main_state_machine/state_machine.c
+    main_state_machine/state_mode_selection/state_mode_selection.c
+    main_state_machine/state_weather_out/state_weather_out.c
+    main_state_machine/state_weather_in/state_weather_in.c
+    main_state_machine/state_set_time/state_set_time.c
+    main_state_machine/state_set_alarm/state_set_alarm.c
+    main_state_machine/state_alarm/state_alarm.c
     logic_init.c
 
     #External hw files
