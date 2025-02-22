@@ -89,6 +89,15 @@ TEST(alarm, AfterRefreshAlarmStringIsGone)
 }
 
 
+TEST(alarm, AfterDoubleRefreshAlarmStringIsBackAndTimeDoesNotChange)
+{
+    struct time example_time = {19, 50, 0};
+    time_set(example_time);
+    entry_state();
+    refresh();
+    refresh();
+    TEST_ASSERT_EQUAL_STRING("\n        ALARM\n      19:50:00", test_buf);
+}
 
 
 /* Helper functions */

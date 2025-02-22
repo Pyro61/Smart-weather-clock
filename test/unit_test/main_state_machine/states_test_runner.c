@@ -67,4 +67,5 @@ TEST_GROUP_RUNNER(alarm)
    RUN_TEST_CASE(alarm, PressedOkButtonReturnedStateIsTheSameAsGivenToStateEntry);
    RUN_TEST_CASE(alarm, WriteTimeThenEntryAlarmStateTimeShownOnDisplayIsTheSameAsWritten);
    RUN_TEST_CASE(alarm, AfterRefreshAlarmStringIsGone);
+   RUN_TEST_CASE(alarm, AfterDoubleRefreshAlarmStringIsBackAndTimeDoesNotChange);
 }
