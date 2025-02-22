@@ -32,7 +32,7 @@ static const char alarm_window_template[BUFFER_MAX_SIZE] =
 
 
 /* Alarm blink buffer positions and chars */
-static const uint8_t alarm_blink_buf_positions[BLINK_ELEMENTS] = {10, 11, 12, 13, 14};
+static const uint8_t alarm_blink_buf_positions[BLINK_ELEMENTS] = {9, 10, 11, 12, 13};
 static const char alarm_string_chars[BLINK_ELEMENTS] = {'A', 'L', 'A', 'R', 'M'};
 
 /* Display buffer */

@@ -19,6 +19,7 @@ static char test_buf[80];
 
 /* Helper function definitions */
 static void reset_test_buf(void);
+static void reset_time(void);
 static void init_state(void);
 static void entry_state(void);
 static void exit_state(void);
@@ -37,6 +38,7 @@ TEST_SETUP(alarm)
     init_state();
     display_mock_reset_buf();
     reset_test_buf();
+    reset_time();
 }
 
 
@@ -93,6 +95,13 @@ TEST(alarm, AfterRefreshAlarmStringIsGone)
 static void reset_test_buf(void)
 {
     memset(test_buf, 0, 80);
+}
+
+
+static void reset_time(void)
+{
+    struct time t = {0, 0, 0};
+    time_set(t);
 }
 
 
