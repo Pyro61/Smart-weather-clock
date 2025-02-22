@@ -10,6 +10,16 @@ void alarm_set(struct time time)
 
 }
 
+void alarm_start(void)
+{
+
+}
+
+void alarm_stop(void)
+{
+    
+}
+
 //struct alarm_hw_interface
 //{
 //init
