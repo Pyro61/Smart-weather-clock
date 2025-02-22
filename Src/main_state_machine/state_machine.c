@@ -101,7 +101,7 @@ void main_state_machine_init(struct display_interface *display_funs)
     if (events_subscribe(state_machine_button_left_pressed_handle, EVENT_BUTTON_LEFT_PRESSED) != SUBSCRIBE_SUCCESS) safe_state();
     if (events_subscribe(state_machine_button_up_pressed_handle, EVENT_BUTTON_UP_PRESSED) != SUBSCRIBE_SUCCESS) safe_state();
     if (events_subscribe(state_machine_button_down_pressed_handle, EVENT_BUTTON_DOWN_PRESSED) != SUBSCRIBE_SUCCESS) safe_state();
-    if (events_subscribe(state_machine_refresh_handle, EVENT_REFRESH) != SUBSCRIBE_SUCCESS) safe_state();
+    if (events_subscribe(state_machine_refresh_handle, EVENT_1S_ELAPSED) != SUBSCRIBE_SUCCESS) safe_state();
     if (events_subscribe(state_machine_alarm_handle, EVENT_ALARM) != SUBSCRIBE_SUCCESS) safe_state();
 
     /* Call all states init functions */
