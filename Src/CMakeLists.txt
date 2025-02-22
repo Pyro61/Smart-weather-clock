@@ -23,6 +23,7 @@ set(C_SRCS
     sys_comm/adapter_sys_comm.c
     weather_control/weather_sensors_control.c
     alarm/alarm.c
+    time/time.c
     main_state_machine/state_machine.c
     main_state_machine/state_mode_selection/state_mode_selection.c
     main_state_machine/state_weather_out/state_weather_out.c
