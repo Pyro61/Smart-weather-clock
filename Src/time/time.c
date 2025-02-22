@@ -1,17 +1,30 @@
 #include "time.h"
+#include "../events/events.h"
 
-void time_init(void)
+/* Hw functions holder */
+static struct time_interface *time_hw_funs;
+
+/* 1s elapsed callback */
+static void second_elapsed_cb(void)
 {
-    //subscribe to EVENT_1S_ELAPSED
-    //nofity subscribers 1s elapsed callback to rtc_start_1s_timer
+    events_notify_subscribers(EVENT_1S_ELAPSED);
 }
+
+
+void time_init(struct time_interface *time_interface)
+{
+    time_hw_funs = time_interface;
+    time_hw_funs -> time_start_1s(second_elapsed_cb);
+}
+
 
 void time_set(struct time time)
 {
-
+    time_hw_funs -> time_set(time);
 }
+
 
 struct time time_get(void)
 {
-    
+    return time_hw_funs -> time_get();
 }
