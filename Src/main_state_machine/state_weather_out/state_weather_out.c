@@ -306,7 +306,7 @@ static void check_alarm(char *buf)
 static void write_time_to_buf(char *buf, struct time time)
 {
     /* Check if time is correct */
-    if (time.hours < 24 || time.minutes < 60 || time.seconds < 60)
+    if (time.hours < 24 && time.minutes < 60 && time.seconds < 60)
     {
         /* Hour tens */
         uint8_t tmp = time.hours / 10;

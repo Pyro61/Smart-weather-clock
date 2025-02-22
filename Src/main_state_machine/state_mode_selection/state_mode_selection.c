@@ -29,7 +29,7 @@ static uint8_t selected_mode = 1;
 static const uint8_t selected_mode_sign_buf_position[SELECTABLE_MODES_QUANTITY] = {0, 20, 41, 55};
 
 /* Display functions holder */
-struct display_interface display;
+static struct display_interface display;
 
 
 /* Helper functions declarations */
