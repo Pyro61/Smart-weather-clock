@@ -58,8 +58,6 @@ TEST_GROUP_RUNNER(set_alarm)
    RUN_TEST_CASE(set_alarm, WhenEditingHourTensPressRightButton2TimesAfterThatLeftButton1TimeThenEditingTimeIsHourUnits);
    RUN_TEST_CASE(set_alarm, WhenTimeIsSetTo20_00_00RefreshAfterThatPressRightButtonThenDisplayShows20_00_00);
    RUN_TEST_CASE(set_alarm, WhenTimeIsSetTo01_00_00RefreshAfterThatPressDownButtonThenDisplayShows00_00_00);
-<<<<<<< HEAD
-=======
 }
 
 TEST_GROUP_RUNNER(alarm)
@@ -70,5 +68,4 @@ TEST_GROUP_RUNNER(alarm)
    RUN_TEST_CASE(alarm, WriteTimeThenEntryAlarmStateTimeShownOnDisplayIsTheSameAsWritten);
    RUN_TEST_CASE(alarm, AfterRefreshAlarmStringIsGone);
    RUN_TEST_CASE(alarm, AfterDoubleRefreshAlarmStringIsBackAndTimeDoesNotChange);
->>>>>>> feature-state_alarm
 }
