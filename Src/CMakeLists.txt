@@ -48,6 +48,7 @@ set(C_SRCS
     hw/mcu_hw/tim/tim.c
     hw/mcu_hw/i2c/i2c.c
     hw/mcu_hw/uart/uart.c
+    hw/mcu_hw/rtc/rtc.c
 )
 
 set(ASM_SRCS
