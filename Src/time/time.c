@@ -1,8 +1,10 @@
 #include "time.h"
 #include "../events/events.h"
 
+
 /* Hw functions holder */
 static struct time_interface *time_hw_funs;
+
 
 /* 1s elapsed callback */
 static void second_elapsed_cb(void)
@@ -11,14 +13,15 @@ static void second_elapsed_cb(void)
 }
 
 
-void time_init(struct time_interface *time_interface)
+/* API functions */
+void time_init(const struct time_interface *time_interface)
 {
     time_hw_funs = time_interface;
     time_hw_funs -> time_start_1s(second_elapsed_cb);
 }
 
 
-void time_set(struct time time)
+void time_set(const struct time time)
 {
     time_hw_funs -> time_set(time);
 }
