@@ -2,7 +2,7 @@
 #include "../events/events.h"
 
 /* Hw functions holder */
-static struct alarm_interface *alarm_hw_funs;
+static struct alarm_time_interface *alarm_time_hw_funs;
 
 
 /* Alarm callback */
@@ -13,31 +13,31 @@ static void alarm_cb(void)
 
 
 /* API functions */
-void alarm_init(struct alarm_interface *alarm_interface)
+void alarm_init(const struct alarm_time_interface *alarm_time_interface)
 {
-    alarm_hw_funs = alarm_interface;
+    alarm_time_hw_funs = alarm_time_interface;
 }
 
 
 bool is_alarm_set(void)
 {
-    return alarm_hw_funs -> is_alarm_set();
+    return alarm_time_hw_funs -> is_alarm_set();
 }
 
 
-void alarm_set(struct time time)
+void alarm_set(const struct time time)
 {
-    alarm_hw_funs -> alarm_set(time, alarm_cb);
+    alarm_time_hw_funs -> alarm_set(time, alarm_cb);
 }
 
 
 void alarm_start(void)
 {
-    alarm_hw_funs -> alarm_start();
+
 }
 
 
 void alarm_stop(void)
 {
-    alarm_hw_funs -> alarm_stop();
+
 }
