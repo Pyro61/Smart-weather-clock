@@ -39,6 +39,7 @@ set(C_SRCS
     hw/external_hw/aht15/aht15.c
     hw/external_hw/HC05/HC05.c
     hw/external_hw/buzzer/buzzer.c
+    hw/external_hw/HD44780/HD44780.c
 
     #MCU hw files
     hw/mcu_hw/mcu_hw_init.c
