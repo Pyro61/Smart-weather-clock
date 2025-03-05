@@ -3,6 +3,7 @@
 #include "aht15/aht15.h"
 #include "HC05/HC05.h"
 #include "buzzer/buzzer.h"
+#include "HD44780/HD44780.h"
 
 void external_hw_init(void)
 {
@@ -10,4 +11,5 @@ void external_hw_init(void)
     aht15_init();
     HC05_init();
     buzzer_init();
+    HD44780_init();
 }
