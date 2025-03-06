@@ -82,6 +82,6 @@ enum exti_trigger
 
 enum gpio_err gpio_set_af(enum gpio_port port, uint8_t pin, uint8_t af);
 enum gpio_err gpio_config(enum gpio_port port, uint8_t pin, uint8_t mode, uint8_t pp_od, uint8_t pull, uint8_t speed);
-enum gpio_err gpio_set_exti(uint8_t pin, enum exti_trigger trig, cb_t cb);
+enum gpio_err gpio_set_exti(enum gpio_port port, uint8_t pin, enum exti_trigger trig, cb_t cb);
 enum gpio_err gpio_output_write(enum gpio_port port, uint8_t pin, enum gpio_state state);
 enum gpio_state gpio_input_read(enum gpio_port port, uint8_t pin);
