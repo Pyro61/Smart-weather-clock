@@ -4,6 +4,7 @@
 #include "HC05/HC05.h"
 #include "buzzer/buzzer.h"
 #include "HD44780/HD44780.h"
+#include "buttons/buttons.h"
 
 void external_hw_init(void)
 {
@@ -12,4 +13,5 @@ void external_hw_init(void)
     HC05_init();
     buzzer_init();
     HD44780_init();
+    buttons_init();
 }
