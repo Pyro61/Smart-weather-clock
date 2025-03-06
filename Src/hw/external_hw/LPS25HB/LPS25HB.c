@@ -46,7 +46,7 @@ void LPS25HB_init(void)
     /* Configure GPIO Pins */
     /* PA12 - IRQ */
     if (gpio_config(PORT_A, 12, INPUT, PUSH_PULL, NO_PULL, SPEED_LOW) == ERR) safe_state();
-    if (gpio_set_exti(12, RISING_EDGE, LPS25HB_read_data) == ERR) safe_state();
+    if (gpio_set_exti(PORT_A, 12, RISING_EDGE, LPS25HB_read_data) == ERR) safe_state();
 
     /* Wait for device power up */
     delay_ms(10);

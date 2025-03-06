@@ -99,10 +99,10 @@ enum gpio_err gpio_set_af(enum gpio_port port, uint8_t pin, uint8_t af)
 }
 
 
-enum gpio_err gpio_set_exti(uint8_t pin, enum exti_trigger trig, cb_t cb)
+enum gpio_err gpio_set_exti(enum gpio_port port, uint8_t pin, enum exti_trigger trig, cb_t cb)
 {
     /* Check if all values are correct */
-    if (is_pin_correct(pin) && is_trigger_correct(trig))
+    if (is_pin_correct(pin) && is_trigger_correct(trig) && is_port_correct(port))
     {   
         if (exti_cb_array[pin] != NULL)
         {
@@ -132,6 +132,11 @@ enum gpio_err gpio_set_exti(uint8_t pin, enum exti_trigger trig, cb_t cb)
                 break;
             }
         }
+
+        /* Select correct port to handle EXTI */
+        RCC -> APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+        SYSCFG->EXTICR[pin / 4] &= ~(0xF << (4 * (pin % 4)));
+        SYSCFG -> EXTICR[pin / 4] |= ((uint8_t)port << (4 * (pin % 4)));
         
         /* Configure NVIC */
         uint8_t irq_n = get_exti_irq_n(pin);
@@ -208,6 +213,61 @@ void EXTI15_10_IRQHandler(void)
     {
         EXTI -> PR1 |= EXTI_PR1_PIF12;
         exti_cb_array[12]();
+    }
+}
+
+
+void EXTI0_IRQHandler(void)
+{
+    /* EXTI line 0 IRQ */
+    if (EXTI -> PR1 & EXTI_PR1_PIF0)
+    {
+        EXTI -> PR1 |= EXTI_PR1_PIF0;
+        exti_cb_array[0]();
+    }
+}
+
+
+void EXTI1_IRQHandler(void)
+{
+    /* EXTI line 1 IRQ */
+    if (EXTI -> PR1 & EXTI_PR1_PIF1)
+    {
+        EXTI -> PR1 |= EXTI_PR1_PIF1;
+        exti_cb_array[1]();
+    }
+}
+
+
+void EXTI2_IRQHandler(void)
+{
+    /* EXTI line 2 IRQ */
+    if (EXTI -> PR1 & EXTI_PR1_PIF2)
+    {
+        EXTI -> PR1 |= EXTI_PR1_PIF2;
+        exti_cb_array[2]();
+    }
+}
+
+
+void EXTI3_IRQHandler(void)
+{
+    /* EXTI line 3 IRQ */
+    if (EXTI -> PR1 & EXTI_PR1_PIF3)
+    {
+        EXTI -> PR1 |= EXTI_PR1_PIF3;
+        exti_cb_array[3]();
+    }
+}
+
+
+void EXTI4_IRQHandler(void)
+{
+    /* EXTI line 4 IRQ */
+    if (EXTI -> PR1 & EXTI_PR1_PIF4)
+    {
+        EXTI -> PR1 |= EXTI_PR1_PIF4;
+        exti_cb_array[4]();
     }
 }
 
