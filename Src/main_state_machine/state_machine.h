@@ -4,4 +4,4 @@
 
 
 /* Init function */
-void main_state_machine_init(struct display_interface *display_funs);
+void main_state_machine_init(const struct display_interface *display_funs);

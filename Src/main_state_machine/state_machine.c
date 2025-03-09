@@ -2,6 +2,13 @@
 #include "../events/events.h"
 #include "../safe_state/safe_state.h"
 
+#include "state_mode_selection/state_mode_selection.h"
+#include "state_weather_in/state_weather_in.h"
+#include "state_weather_out/state_weather_out.h"
+#include "state_set_time/state_set_time.h"
+#include "state_set_alarm/state_set_alarm.h"
+#include "state_alarm/state_alarm.h"
+
 
 /* Currect and last state */
 static enum state_status current_state = WEATHER_IN;
@@ -12,7 +19,12 @@ typedef const struct main_state_interface * (*main_state_get_t)(void);
 
 static const main_state_get_t states[STATE_MAX] = 
 {
-	0 //only for compiling
+	main_state_mode_selection_get,
+    main_state_weather_in_get,
+    main_state_weather_out_get,
+    main_state_set_time_get,
+    main_state_set_alarm_get,
+    main_state_alarm_get
 };
 
 
@@ -84,7 +96,7 @@ static void state_machine_alarm_handle(void)
 }
 
 
-static void state_machine_init_all_states(struct display_interface *display_funs)
+static void state_machine_init_all_states(const struct display_interface *display_funs)
 {
     uint8_t i;
     for (i = 0; i < STATE_MAX; i++)
@@ -93,7 +105,7 @@ static void state_machine_init_all_states(struct display_interface *display_funs
     }
 }
 
-void main_state_machine_init(struct display_interface *display_funs)
+void main_state_machine_init(const struct display_interface *display_funs)
 {
     /* Check for correct subscribes, otherwise program won't run correctly */
     if (events_subscribe(state_machine_button_ok_mode_pressed_handle, EVENT_BUTTON_OK_MODE_PRESSED) != SUBSCRIBE_SUCCESS) safe_state();
