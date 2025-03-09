@@ -67,6 +67,7 @@ void HD44780_init(void)
     E_LOW();
     delay_ms(50); /* Wait for power up */
 
+    /* Configure display */
     send_4_bits(0x03);
 	delay_ms(5);
 	send_4_bits(0x03);
@@ -86,6 +87,11 @@ void HD44780_init(void)
 
 static void HD44780_print(const char *buf)
 {
+    /* Set current position to 0,0 */
+    col = 0;
+    row = 0;
+    change_position(col, row);
+    
     while (*buf)
     {
         /* Check writing position and eventually change it */
@@ -116,7 +122,7 @@ static void HD44780_clear(void)
     send_cmd(CMD_CLEAR);
     row = 0;
     col = 0;
-    delay_ms(1); /* Without it first line is cut */
+    delay_ms(2); /* Without it first line is cut */
 }
 
 
