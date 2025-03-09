@@ -19,11 +19,24 @@
 #include <stdint.h>
 #include "../Inc/main.h"
 #include "../../hw/mcu_hw/mcu_hw_init.h"
-
+#include "../../hw/external_hw/external_hw_init.h"
+#include "../../alarm/alarm.h"
+#include "../../time/time.h"
+#include "../../hw/mcu_hw/rtc/rtc.h"
+#include "../../types.h"
+#include "../../hw/external_hw/buzzer/buzzer.h"
+#include "../../hw/external_hw/HD44780/HD44780.h"
+#include "../../hw/mcu_hw/tim/tim.h"
+#include "../../logic_init.h"
 
 int main(void)
 {
     mcu_hw_init();
+    external_hw_init();
+    logic_init();
     /* Loop forever */
-	  for(;;);
+	while (1)
+    {
+        
+    }
 }
