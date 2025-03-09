@@ -81,6 +81,11 @@ void rtc_init(void)
     /* Set priority and enable Alarm interrupt */
     NVIC_SetPriority(RTC_Alarm_IRQn, 0);
     NVIC_EnableIRQ(RTC_Alarm_IRQn);
+
+    /* Clear wakeup timer irq (without it irq was not handled) */
+    RTC->SCR = RTC_SCR_CWUTF; /* Clear wakeup timer interrupt flag */
+    EXTI->PR1 = EXTI_PR1_PIF20; /* Clear EXTI20 interrupt flag */
+    while(RTC->SR & RTC_SR_WUTF); /* Wait for wakeup timer interrupt flag to be cleared */
 }
 
 
@@ -122,6 +127,8 @@ static struct time rtc_get_time(void)
     time.hours = ((tmp >> 20) & 0x3) * 10 + ((tmp >> 16) & 0xF);
     time.minutes = ((tmp >> 12) & 0x7) * 10 + ((tmp >> 8) & 0xF);
     time.seconds = ((tmp >> 4) & 0x7) * 10 + (tmp & 0xF);
+    
+    uint32_t date = RTC -> DR; /* Used for correct time read */
 
     return time;
 }
