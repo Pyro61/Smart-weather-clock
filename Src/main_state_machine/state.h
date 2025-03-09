@@ -19,7 +19,7 @@ enum state_status
 };
 
 /* Init function pointer typedef */
-typedef void (*main_state_init_t)(struct display_interface *display_funs);
+typedef void (*main_state_init_t)(const struct display_interface *display_funs);
 
 /* Entry to and exit from state function pointer typedefs */
 typedef void (*main_state_entry_t)(enum state_status last_state);
