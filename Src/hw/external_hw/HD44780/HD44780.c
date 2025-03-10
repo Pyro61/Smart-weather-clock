@@ -91,7 +91,7 @@ static void HD44780_print(const char *buf)
     col = 0;
     row = 0;
     change_position(col, row);
-    
+
     while (*buf)
     {
         /* Check writing position and eventually change it */
@@ -103,6 +103,13 @@ static void HD44780_print(const char *buf)
         /* New line */
         if (*buf == '\n')
         {
+            /* Line already changed */
+            if (col == 0)
+            {
+                buf++;
+                continue;
+            }
+
             row++;
             col = 0;
             buf++;
