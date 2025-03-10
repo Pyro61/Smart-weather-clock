@@ -32,7 +32,7 @@ static const char set_alarm_window_template[BUFFER_MAX_SIZE] =
 static char buf[BUFFER_MAX_SIZE];
 
 /* Display functions holder */
-static struct display_interface display;
+static const struct display_interface *display;
 
 /* Time parts buffer positions */
 static const uint8_t set_alarm_time_parts_buf_positions[SET_ALARM_TIME_PARTS] = {48, 49, 51, 52, 54, 55};
@@ -58,15 +58,13 @@ static void blink_edited_alarm_time_part(char *buf, uint8_t edited_alarm_time_pa
 
 
 /* State functions */
-static void set_alarm_init(struct display_interface *funs)
+static void set_alarm_init(const struct display_interface *funs)
 {
     /* Check if display functions pointers are not NULL pointers */
     if ((funs -> init == NULL) || (funs -> print == NULL) || (funs -> clear == NULL)) safe_state();
 
     /* Save display functions to holder */
-    display.init = funs -> init;
-    display.print = funs -> print;
-    display.clear = funs -> clear;
+    display = funs;
 }
 
 
@@ -83,14 +81,14 @@ static void set_alarm_on_entry(enum state_status last_state)
     /* Copy initial display output to buffer */
     strncpy(buf, set_alarm_window_template, BUFFER_MAX_SIZE);
     /* Print display output */
-    display.print(buf);
+    display->print(buf);
 }
 
 
 static void set_alarm_on_exit(void)
 {
     alarm_set(alarm_time);
-    display.clear();
+    display->clear();
 }
 
 
@@ -106,7 +104,7 @@ static enum state_status set_alarm_on_right_button_pressed(void)
     {
         edited_alarm_time_part++;
         prepare_buf(buf, alarm_time);
-        display.print(buf);
+        display->print(buf);
     }
 
     return STATE_UNCHANGED;
@@ -119,7 +117,7 @@ static enum state_status set_alarm_on_left_button_pressed(void)
     {
         edited_alarm_time_part--;
         prepare_buf(buf, alarm_time);
-        display.print(buf);
+        display->print(buf);
     }
 
     return STATE_UNCHANGED;
@@ -133,7 +131,7 @@ static enum state_status set_alarm_on_up_button_pressed(void)
     {
         save_alarm_time_part_value(edited_alarm_time_part, tmp + 1);
         prepare_buf(buf, alarm_time);
-        display.print(buf);
+        display->print(buf);
     }
     return STATE_UNCHANGED;
 }
@@ -146,7 +144,7 @@ static enum state_status set_alarm_on_down_button_pressed(void)
     {
         save_alarm_time_part_value(edited_alarm_time_part, tmp - 1);
         prepare_buf(buf, alarm_time);
-        display.print(buf);
+        display->print(buf);
     }
     return STATE_UNCHANGED;
 }
@@ -155,7 +153,7 @@ static enum state_status set_alarm_on_down_button_pressed(void)
 static enum state_status set_alarm_on_refresh(void)
 {
     blink_edited_alarm_time_part(buf, edited_alarm_time_part);
-    display.print(buf);
+    display->print(buf);
 
     return STATE_UNCHANGED;
 }
