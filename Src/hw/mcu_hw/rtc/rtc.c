@@ -76,10 +76,10 @@ void rtc_init(void)
 
     /* NVIC configuration */
     /* Set priority and enable Wakeup timer interrupt */
-    NVIC_SetPriority(RTC_WKUP_IRQn, 1); 
+    NVIC_SetPriority(RTC_WKUP_IRQn, 6); 
     NVIC_EnableIRQ(RTC_WKUP_IRQn);
     /* Set priority and enable Alarm interrupt */
-    NVIC_SetPriority(RTC_Alarm_IRQn, 0);
+    NVIC_SetPriority(RTC_Alarm_IRQn, 5);
     NVIC_EnableIRQ(RTC_Alarm_IRQn);
 
     /* Clear wakeup timer irq (without it irq was not handled) */
@@ -214,6 +214,12 @@ void RTC_ALARM_IRQHandler(void)
     {
         RTC -> SCR = RTC_SCR_CALRAF; /* Clear alarm A interrupt flag */
         EXTI -> PR1 = EXTI_PR1_PIF17; /* Clear EXTI17 interrupt flag */
+        
+        /* Disable alarm A */
+        unlock_rtc_registers_write();
+        RTC -> CR &= ~RTC_CR_ALRAE;
+        lock_rtc_registers_write();
+
         while (RTC -> SR & RTC_SR_ALRAF); /* Wait for alarm A interrupt flag to be cleared */
 
         /* Call callback function */
