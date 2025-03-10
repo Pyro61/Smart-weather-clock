@@ -29,9 +29,9 @@
 #define BUF_POSITION_SECOND_TENS        6
 #define BUF_POSITION_SECOND_UNITS       7
 #define BUF_POSITION_ALARM_SIGN         11
-#define BUF_POSITION_TEMP_MINUS         14
-#define BUF_POSITION_TEMP_TENS          15
-#define BUF_POSITION_TEMP_UNITS         16
+#define BUF_POSITION_TEMP_MINUS         13
+#define BUF_POSITION_TEMP_TENS          14
+#define BUF_POSITION_TEMP_UNITS         15
 #define BUF_POSITION_HUM_HUNDREDS       26
 #define BUF_POSITION_HUM_TENS           27
 #define BUF_POSITION_HUM_UNITS          28
@@ -50,7 +50,7 @@ static const uint8_t blinking_sign_buf_position[BLINKING_SIGN_QUANTITY] = {2, 5}
 /* Display window template */
 static const char *weather_out_window_template = 
 "hh:mm:ss   A\n\
-mtt *C      hum %\n\
+mtt  *C      hum %\n\
 pres hPa    no rain\n\
 ";
 
@@ -59,7 +59,7 @@ pres hPa    no rain\n\
 static char buf[BUFFER_MAX_SIZE];
 
 /* Display functions holder */
-static struct display_interface display;
+static const struct display_interface *display;
 
 /* Weather data holder */
 static struct weather_data data;
@@ -79,15 +79,13 @@ static void read_weather_data(void);
 
 
 /* State functions */
-static void weather_out_init(struct display_interface *funs)
+static void weather_out_init(const struct display_interface *funs)
 {
     /* Check if display functions pointers are not NULL pointers */
     if ((funs -> init == NULL) || (funs -> print == NULL) || (funs -> clear == NULL)) safe_state();
 
     /* Save display functions to holder */
-    display.init = funs -> init;
-    display.print = funs -> print;
-    display.clear = funs -> clear;
+    display = funs;
 
     /* Subscribe to data from external sensor arrival */
     if (events_subscribe(read_weather_data, EVENT_SEND) != SUBSCRIBE_SUCCESS) safe_state();
@@ -101,14 +99,14 @@ static void weather_out_on_entry(enum state_status last_state)
     read_weather_data();
     strncpy(buf, weather_out_window_template, strlen(weather_out_window_template));
     prepare_buf(data);
-    display.print(buf);
+    display->print(buf);
 }
 
 
 static void weather_out_on_exit(void)
 {
     adapter_sys_comm_send_req_stop_meas();
-    display.clear();
+    display->clear();
 }
 
 
@@ -148,7 +146,7 @@ static enum state_status weather_out_on_refresh(void)
     adapter_sys_comm_send_req_get_data();
     read_weather_data();
     prepare_buf(data);
-    display.print(buf);
+    display->print(buf);
 
     return STATE_UNCHANGED;
 }
@@ -197,7 +195,15 @@ static void write_temp_to_buf(char *buf, temp_Cdeg_t t)
     if (abs(t) >= 100) return;
 
     /* Minus sign */
-    if (t < 0) modify_buffer_1_char(buf, BUF_POSITION_TEMP_MINUS, '-');
+    if (t < 0)
+    {
+        modify_buffer_1_char(buf, BUF_POSITION_TEMP_MINUS, '-');
+    }
+
+    else
+    {
+        modify_buffer_1_char(buf, BUF_POSITION_TEMP_MINUS, BLANK_SIGN);
+    }
     /* Get absolute value */
     uint32_t tmp = abs(t);
     /* Write mumber of tens */
@@ -257,26 +263,26 @@ static void write_rain_state_to_buf(char *buf, enum rain_state r)
 {
     if (r == RAINING)
     {
-        /* "   RAIN" */
+        /* "   rain" */
         modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_N, BLANK_SIGN);
         modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_O, BLANK_SIGN);
     }
 
     else if (r == SENSOR_NOT_APPLIED)
     {
-        /* "NO DATA" */
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_N, BLANK_SIGN);
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_O, BLANK_SIGN);
+        /* "no data" */
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_N, 'n');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_O, 'o');
 
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_R, 'D');
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_A, 'A');
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_I, 'T');
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_N, 'A');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_R, 'd');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_A, 'a');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_I, 't');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_N, 'a');
     }
 
     else if (r == NOT_RAINING)
     {
-        /* "NO RAIN" */
+        /* "no rain" */
         /* already written in template, do nothing */
     }
 
@@ -316,16 +322,16 @@ static void write_time_to_buf(char *buf, struct time time)
         modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
         /* Minute tens */
         tmp = time.minutes / 10;
-        modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
+        modify_buffer_1_char(buf, BUF_POSITION_MINUTE_TENS, tmp + '0');
         /* Minute units */
         tmp = time.minutes % 10;
-        modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
+        modify_buffer_1_char(buf, BUF_POSITION_MINUTE_UNITS, tmp + '0');
         /* Second tens */
         tmp = time.seconds / 10;
-        modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
+        modify_buffer_1_char(buf, BUF_POSITION_SECOND_TENS, tmp + '0');
         /* Second units */
         tmp = time.seconds % 10;
-        modify_buffer_1_char(buf, BUF_POSITION_HOUR_UNITS, tmp + '0');
+        modify_buffer_1_char(buf, BUF_POSITION_SECOND_UNITS, tmp + '0');
     }
 
     else
@@ -370,5 +376,5 @@ static void blink_signs(char *buf)
 static void read_weather_data(void)
 {
     /* Copy data from reception buffer to data holder */
-    adapter_sys_comm_copy_recv_buf((uint8_t*)&data);
+    adapter_sys_comm_copy_data((uint8_t*)&data);
 }

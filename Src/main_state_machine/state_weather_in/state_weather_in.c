@@ -33,25 +33,25 @@
 #define BUF_POSITION_TEMP_MINUS         13
 #define BUF_POSITION_TEMP_TENS          14
 #define BUF_POSITION_TEMP_UNITS         15
-#define BUF_POSITION_HUM_HUNDREDS       25
-#define BUF_POSITION_HUM_TENS           26
-#define BUF_POSITION_HUM_UNITS          27
-#define BUF_POSITION_PRES_THOUSANDS     31 
-#define BUF_POSITION_PRES_HUNDREDS      32
-#define BUF_POSITION_PRES_TENS          33
-#define BUF_POSITION_PRES_UNITS         34
-#define BUF_POSITION_RAIN_NO_N          43
-#define BUF_POSITION_RAIN_NO_O          44
-#define BUF_POSITION_RAIN_R             46
-#define BUF_POSITION_RAIN_A             47
-#define BUF_POSITION_RAIN_I             48
-#define BUF_POSITION_RAIN_N             49
+#define BUF_POSITION_HUM_HUNDREDS       26
+#define BUF_POSITION_HUM_TENS           27
+#define BUF_POSITION_HUM_UNITS          28
+#define BUF_POSITION_PRES_THOUSANDS     32 
+#define BUF_POSITION_PRES_HUNDREDS      33
+#define BUF_POSITION_PRES_TENS          34
+#define BUF_POSITION_PRES_UNITS         35
+#define BUF_POSITION_RAIN_NO_N          44
+#define BUF_POSITION_RAIN_NO_O          45
+#define BUF_POSITION_RAIN_R             47
+#define BUF_POSITION_RAIN_A             48
+#define BUF_POSITION_RAIN_I             49
+#define BUF_POSITION_RAIN_N             50
 static const uint8_t blinking_sign_buf_position[BLINKING_SIGN_QUANTITY] = {2, 5};
 
 /* Display window template */
 static const char *weather_out_window_template = 
 "hh:mm:ss   A\n\
-mtt *C      hum %\n\
+mtt  *C      hum %\n\
 pres hPa    no rain\n\
 ";
 
@@ -273,26 +273,26 @@ static void write_rain_state_to_buf(char *buf, enum rain_state r)
 {
     if (r == RAINING)
     {
-        /* "   RAIN" */
+        /* "   rain" */
         modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_N, BLANK_SIGN);
         modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_O, BLANK_SIGN);
     }
 
     else if (r == SENSOR_NOT_APPLIED)
     {
-        /* "NO DATA" */
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_N, 'N');
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_O, 'O');
+        /* "no data" */
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_N, 'n');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_NO_O, 'o');
 
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_R, 'D');
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_A, 'A');
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_I, 'T');
-        modify_buffer_1_char(buf, BUF_POSITION_RAIN_N, 'A');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_R, 'd');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_A, 'a');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_I, 't');
+        modify_buffer_1_char(buf, BUF_POSITION_RAIN_N, 'a');
     }
 
     else if (r == NOT_RAINING)
     {
-        /* "NO RAIN" */
+        /* "no rain" */
         /* already written in template, do nothing */
     }
 
