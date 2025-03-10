@@ -35,7 +35,7 @@ void i2c1_init(void)
 	 * Periph addr, priority, memory and periph sizes, mem inc mode, transfer complete and error IRQ, DMA request source */
 	DMA1_Channel2 -> CPAR = (uint32_t)&(I2C1 -> RXDR);
 	DMA1_Channel2 -> CCR |= DMA_CCR_PL_0 | DMA_CCR_MINC | DMA_CCR_TEIE | DMA_CCR_TCIE;
-    NVIC_SetPriority(DMA1_Channel2_IRQn, 10); /* Set low priority because inside irq callback fun is called */
+    NVIC_SetPriority(DMA1_Channel2_IRQn, 1); /* Set low priority because inside irq callback fun is called */
 	NVIC_EnableIRQ(DMA1_Channel2_IRQn);
 	DMAMUX1_Channel1 -> CCR |= 16;
 }
@@ -181,6 +181,7 @@ void i2c2_init(void)
 	RCC -> APB1ENR1 |= RCC_APB1ENR1_I2C2EN;
 	I2C2 -> TIMINGR = 0x00D0D2FF;
 	I2C2 -> CR1 |= I2C_CR1_PE | I2C_CR1_STOPIE | I2C_CR1_ANFOFF;
+	NVIC_SetPriority(I2C2_EV_IRQn, 0);
 	NVIC_EnableIRQ(I2C2_EV_IRQn);
 	I2C2 -> OAR1 |= I2C_OAR1_OA1EN;
 
@@ -190,7 +191,7 @@ void i2c2_init(void)
 	 * Periph addr, priority, memory and periph sizes, mem inc mode, transfer complete and error IRQ, DMA request source */
 	DMA1_Channel3 -> CPAR = (uint32_t)&(I2C2 -> RXDR);
 	DMA1_Channel3 -> CCR |= DMA_CCR_PL_0 | DMA_CCR_MINC | DMA_CCR_TEIE | DMA_CCR_TCIE;
-    NVIC_SetPriority(DMA1_Channel3_IRQn, 10); /* Set low priority because inside irq callback fun is called */
+    NVIC_SetPriority(DMA1_Channel3_IRQn, 1); /* Set low priority because inside irq callback fun is called */
 	NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 	DMAMUX1_Channel2 -> CCR |= 18;
 }
