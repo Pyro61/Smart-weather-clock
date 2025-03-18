@@ -1,5 +1,6 @@
 #include "alarm.h"
 #include "../events/events.h"
+#include "../hw/external_hw/buzzer/buzzer.h"
 
 /* Hw functions holder */
 static struct alarm_time_interface *alarm_time_hw_funs;
@@ -33,11 +34,11 @@ void alarm_set(const struct time time)
 
 void alarm_start(void)
 {
-
+    buzzer_start();
 }
 
 
 void alarm_stop(void)
 {
-
+    buzzer_stop();
 }

@@ -41,6 +41,8 @@ set(C_SRCS
     hw/external_hw/buzzer/buzzer.c
     hw/external_hw/HD44780/HD44780.c
     hw/external_hw/buttons/buttons.c
+    hw/external_hw/rain_sensor/rain_sensor.c
+    hw/external_hw/sht20/sht20.c
 
     #MCU hw files
     hw/mcu_hw/mcu_hw_init.c
@@ -67,7 +69,7 @@ set(GLOBAL_DEFINES
     -DDEVICE_ID=0xCA
     
     #Measurements delay in seconds
-    -DMEASUREMENT_S_DELAY=30
+    -DMEASUREMENT_S_DELAY=10
 )
 
 set(LINKED_LIBS

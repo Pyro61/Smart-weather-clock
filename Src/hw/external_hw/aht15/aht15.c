@@ -1,6 +1,7 @@
 #include "aht15.h"
 #include "../../mcu_hw/i2c/i2c.h"
 #include "../../mcu_hw/tim/tim.h"
+#include "../../../events/events.h"
 #include "stdlib.h"
 
 /* Device address */
@@ -61,6 +62,10 @@ void aht15_init(void)
     delay_ms(AHT15_POWER_UP_DELAY_MS);
     aht15_soft_reset();
     delay_ms(AHT15_SOFT_RESET_DELAY_MS);
+    delay_ms(80);
+
+    /* Subsribe measure function to measurement delay event */
+    if (events_subscribe(aht15_start_measuring, EVENT_MEAS_DELAY_ELAPSED) != SUBSCRIBE_SUCCESS) safe_state();
 }
 
 

@@ -42,12 +42,12 @@ void uart4_init(void)
 
 	/* DMA settings */
 	RCC -> AHB1ENR |= RCC_AHB1ENR_DMA1EN | RCC_AHB1ENR_DMAMUX1EN;
-	NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+	NVIC_EnableIRQ(DMA1_Channel4_IRQn);
 	/* Transmit
 	* Periph addr, priority, memory and periph sizes, transfer direction, mem inc mode, transfer complete and error IRQ, DMA request source */
-	DMA1_Channel3 -> CPAR = (uint32_t)&(UART4 -> TDR);
-	DMA1_Channel3 -> CCR |= DMA_CCR_PL_0 | DMA_CCR_DIR | DMA_CCR_MINC | DMA_CCR_TEIE | DMA_CCR_TCIE;
-	DMAMUX1_Channel2 -> CCR |= 31;
+	DMA1_Channel4 -> CPAR = (uint32_t)&(UART4 -> TDR);
+	DMA1_Channel4 -> CCR |= DMA_CCR_PL_0 | DMA_CCR_DIR | DMA_CCR_MINC | DMA_CCR_TEIE | DMA_CCR_TCIE;
+	DMAMUX1_Channel3 -> CCR |= 31;
 
     /* UART reception timer settings (measure time between received bytes, if timer (3ms) turns then this is assumed all bytes are received) */
     /* Prescaler and auto-reload register values dependent on clock freq and measurement delay */
@@ -79,11 +79,11 @@ void uart4_send(uint8_t *buf, uint8_t len)
 {
     /* Set transmitted data size and buffer */
 	UART4 -> CR3 |= USART_CR3_DMAT;
-	DMA1_Channel3 -> CNDTR = len;
-	DMA1_Channel3 -> CMAR = (uint32_t)buf;
+	DMA1_Channel4 -> CNDTR = len;
+	DMA1_Channel4 -> CMAR = (uint32_t)buf;
 
 	/* Start transmission */
-	DMA1_Channel3 -> CCR |= DMA_CCR_EN;
+	DMA1_Channel4 -> CCR |= DMA_CCR_EN;
 	UART4 -> CR1 |= USART_CR1_TE;
 }
 
@@ -111,16 +111,16 @@ static void tim_uart_reset(void)
 
 /* Interrupts */
 /* Transmission */
-void DMA1_Channel3_IRQHandler(void)
+void DMA1_CH4_IRQHandler(void)
 {
 	/* UART4 TX DMA transmission end */
-	if (DMA1 -> ISR & DMA_ISR_TCIF3)
+	if (DMA1 -> ISR & DMA_ISR_TCIF4)
 	{
 		/* Delete half and full complete transfer flags */
-		DMA1 -> IFCR = DMA_IFCR_CTCIF3 | DMA_IFCR_CHTIF3;
+		DMA1 -> IFCR = DMA_IFCR_CTCIF4 | DMA_IFCR_CHTIF4;
 
-		/* Disable DMA CH3 */
-		DMA1_Channel3 -> CCR &= ~DMA_CCR_EN;
+		/* Disable DMA CH4 */
+		DMA1_Channel4 -> CCR &= ~DMA_CCR_EN;
 
 		/* Disable UART4 TX DMA mode */
 		UART4 -> CR3 &= USART_CR3_DMAT;

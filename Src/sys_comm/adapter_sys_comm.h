@@ -10,4 +10,4 @@ void adapter_sys_comm_send_resp_data(struct weather_data *data);
 void adapter_sys_comm_send_req_start_meas(void);
 void adapter_sys_comm_send_req_stop_meas(void);
 void adapter_sys_comm_send_req_get_data(void);
-void adapter_sys_comm_copy_recv_buf(uint8_t *dest_buf);
+void adapter_sys_comm_copy_data(uint8_t *dest_buf);

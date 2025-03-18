@@ -39,7 +39,7 @@ static const char alarm_string_chars[BLINK_ELEMENTS] = {'A', 'L', 'A', 'R', 'M'}
 static char buf[BUFFER_MAX_SIZE];
 
 /* Display functions holder */
-static struct display_interface display;
+static const struct display_interface *display;
 
 /* Alarm time holder */
 static struct time alarm_time;
@@ -56,15 +56,13 @@ static void blink_alarm_string(void);
 
 
 /* State functions */
-static void alarm_state_init(struct display_interface *funs)
+static void alarm_state_init(const struct display_interface *funs)
 {
     /* Check if display functions pointers are not NULL pointers */
     if ((funs -> init == NULL) || (funs -> print == NULL) || (funs -> clear == NULL)) safe_state();
 
     /* Save display functions to holder */
-    display.init = funs -> init;
-    display.print = funs -> print;
-    display.clear = funs -> clear;
+    display = funs;
 }
 
 
@@ -74,14 +72,14 @@ static void alarm_on_entry(enum state_status last_state)
     alarm_time = time_get();
     alarm_start();
     prepare_buf(alarm_time);
-    display.print(buf);
+    display->print(buf);
 }
 
 
 static void alarm_on_exit(void)
 {
     alarm_stop();
-    display.clear();
+    display->clear();
 }
 
 
@@ -118,7 +116,7 @@ static enum state_status alarm_on_down_button_pressed(void)
 static enum state_status alarm_on_refresh(void)
 {
     blink_alarm_string();
-    display.print(buf);
+    display->print(buf);
 
     return STATE_UNCHANGED;
 }

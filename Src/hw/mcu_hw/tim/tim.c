@@ -38,7 +38,7 @@ void tim_delay_init(void)
 	/* Enable counter overflow interrupt */
 	TIM6-> DIER |= TIM_DIER_UIE;
 	NVIC_ClearPendingIRQ(TIM6_DAC_IRQn);
-	NVIC_SetPriority(TIM6_DAC_IRQn, 9);
+	NVIC_SetPriority(TIM6_DAC_IRQn, 4);
 	NVIC_EnableIRQ(TIM6_DAC_IRQn);
 }
 

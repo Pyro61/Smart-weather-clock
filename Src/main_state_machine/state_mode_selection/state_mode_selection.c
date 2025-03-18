@@ -29,7 +29,7 @@ static uint8_t selected_mode = 1;
 static const uint8_t selected_mode_sign_buf_position[SELECTABLE_MODES_QUANTITY] = {0, 20, 41, 55};
 
 /* Display functions holder */
-static struct display_interface display;
+static const struct display_interface *display;
 
 
 /* Helper functions declarations */
@@ -39,15 +39,13 @@ static bool check_selected_mode_position(uint8_t position);
 
 
 /* State functions */
-static void mode_selection_init(struct display_interface *funs)
+static void mode_selection_init(const struct display_interface *funs)
 {
     /* Check if display functions pointers are not NULL pointers */
     if ((funs -> init == NULL) || (funs -> print == NULL) || (funs -> clear == NULL)) safe_state();
 
     /* Save display functions to holder */
-    display.init = funs -> init;
-    display.print = funs -> print;
-    display.clear = funs -> clear;
+    display = funs;
 }
 
 
@@ -56,13 +54,13 @@ static void mode_selection_on_entry(enum state_status last_state)
     (void)last_state; /* Unused */
     selected_mode = 1;
     prepare_buf(selected_mode);
-    display.print(buf);
+    display->print(buf);
 }
 
 
 static void mode_selection_on_exit(void)
 {
-    display.clear();
+    display->clear();
 }
 
 
@@ -90,7 +88,7 @@ static enum state_status mode_selection_on_up_button_pressed(void)
     {
         selected_mode--;
         prepare_buf(selected_mode);
-        display.print(buf);
+        display->print(buf);
     }
 
     return STATE_UNCHANGED;
@@ -103,7 +101,7 @@ static enum state_status mode_selection_on_down_button_pressed(void)
     {
         selected_mode++;
         prepare_buf(selected_mode);
-        display.print(buf);
+        display->print(buf);
     }
 
     return STATE_UNCHANGED;
@@ -118,7 +116,7 @@ static enum state_status mode_selection_on_refresh(void)
     else if (buf[position] == ' ') tmp = '>';
     else {}; /* If everything is alright, this case will never execute */
     modify_buffer_1_char(buf, position, tmp);
-    display.print(buf);
+    display->print(buf);
 
     return STATE_UNCHANGED;
 }

@@ -4,6 +4,7 @@
 #include "../../../safe_state/safe_state.h"
 #include "../../mcu_hw/i2c/i2c.h"
 #include "../../mcu_hw/tim/tim.h"
+#include "../../../events/events.h"
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -56,6 +57,9 @@ void LPS25HB_init(void)
 
     /* Configuration */
     LPS25HB_write_config();
+
+    /* Subsribe measure function to measurement delay event */
+    if (events_subscribe(LPS25HB_start_measuring, EVENT_MEAS_DELAY_ELAPSED) != SUBSCRIBE_SUCCESS) safe_state();
 }
 
 

@@ -32,7 +32,7 @@ static const char set_time_window_template[BUFFER_MAX_SIZE] =
 static char buf[BUFFER_MAX_SIZE];
 
 /* Display functions holder */
-static struct display_interface display;
+static const struct display_interface *display;
 
 /* Time parts buffer positions */
 static const uint8_t set_time_parts_buf_positions[SET_TIME_PARTS] = {48, 49, 51, 52, 54, 55};
@@ -58,15 +58,13 @@ static void blink_edited_time_part(char *buf, uint8_t edited_time_part);
 
 
 /* State functions */
-static void set_time_init(struct display_interface *funs)
+static void set_time_init(const struct display_interface *funs)
 {
     /* Check if display functions pointers are not NULL pointers */
     if ((funs -> init == NULL) || (funs -> print == NULL) || (funs -> clear == NULL)) safe_state();
 
     /* Save display functions to holder */
-    display.init = funs -> init;
-    display.print = funs -> print;
-    display.clear = funs -> clear;
+    display = funs;
 }
 
 
@@ -83,14 +81,14 @@ static void set_time_on_entry(enum state_status last_state)
     /* Copy initial display output to buffer */
     strncpy(buf, set_time_window_template, BUFFER_MAX_SIZE);
     /* Print display output */
-    display.print(buf);
+    display->print(buf);
 }
 
 
 static void set_time_on_exit(void)
 {
     time_set(time);
-    display.clear();
+    display->clear();
 }
 
 
@@ -106,7 +104,7 @@ static enum state_status set_time_on_right_button_pressed(void)
     {
         edited_time_part++;
         prepare_buf(buf, time);
-        display.print(buf);
+        display->print(buf);
     }
 
     return STATE_UNCHANGED;
@@ -119,7 +117,7 @@ static enum state_status set_time_on_left_button_pressed(void)
     {
         edited_time_part--;
         prepare_buf(buf, time);
-        display.print(buf);
+        display->print(buf);
     }
 
     return STATE_UNCHANGED;
@@ -133,7 +131,7 @@ static enum state_status set_time_on_up_button_pressed(void)
     {
         save_time_part_value(edited_time_part, tmp + 1);
         prepare_buf(buf, time);
-        display.print(buf);
+        display->print(buf);
     }
     return STATE_UNCHANGED;
 }
@@ -146,7 +144,7 @@ static enum state_status set_time_on_down_button_pressed(void)
     {
         save_time_part_value(edited_time_part, tmp - 1);
         prepare_buf(buf, time);
-        display.print(buf);
+        display->print(buf);
     }
     return STATE_UNCHANGED;
 }
@@ -155,7 +153,7 @@ static enum state_status set_time_on_down_button_pressed(void)
 static enum state_status set_time_on_refresh(void)
 {
     blink_edited_time_part(buf, edited_time_part);
-    display.print(buf);
+    display->print(buf);
 
     return STATE_UNCHANGED;
 }
@@ -343,8 +341,15 @@ static void blink_edited_time_part(char *buf, uint8_t edited_time_part)
     else if (buf[position] == BLANK_SIGN)
     {
         uint32_t value = get_time_part_value(edited_time_part);
-        if (value % 2 == 0) tmp = (value / 10) + '0'; /* Tens */
-        else tmp = (value % 10) + '0'; /* Units */
+        //if (edited_time_part % 2 == 0)
+        //{
+        //    tmp = (value / 10) + '0'; /* Tens */
+        //} 
+        //else
+        //{
+        //    tmp = (value % 10) + '0'; /* Units */
+        //} 
+        tmp = value + '0';
     }
 
     else {}; /* If everything is alright, this case will never execute */
