@@ -30,7 +30,7 @@ void i2c1_init(void)
 	I2C1 -> OAR1 |= I2C_OAR1_OA1EN;
 
 	/* DMA settings */
-	RCC -> AHB1ENR |= RCC_AHB1ENR_DMA1EN;
+	RCC -> AHB1ENR |= RCC_AHB1ENR_DMA1EN | RCC_AHB1ENR_DMAMUX1EN;
 	/* Receive
 	 * Periph addr, priority, memory and periph sizes, mem inc mode, transfer complete and error IRQ, DMA request source */
 	DMA1_Channel2 -> CPAR = (uint32_t)&(I2C1 -> RXDR);
@@ -186,7 +186,7 @@ void i2c2_init(void)
 	I2C2 -> OAR1 |= I2C_OAR1_OA1EN;
 
 	/* DMA settings */
-	RCC -> AHB1ENR |= RCC_AHB1ENR_DMA1EN;
+	RCC -> AHB1ENR |= RCC_AHB1ENR_DMA1EN | RCC_AHB1ENR_DMAMUX1EN;
 	/* Receive
 	 * Periph addr, priority, memory and periph sizes, mem inc mode, transfer complete and error IRQ, DMA request source */
 	DMA1_Channel3 -> CPAR = (uint32_t)&(I2C2 -> RXDR);
@@ -216,17 +216,15 @@ void i2c2_write_polling(const uint8_t addr, const uint8_t *data, const uint8_t s
 {
 	uint8_t i;
 	/* Write reg address to slave */
-	I2C2 -> CR2 = addr | ((size) << 16) | I2C_CR2_AUTOEND;
-	
-	/* Not using slave registers, so must write 1st byte of data before start */
-	I2C2 -> TXDR = data[0];
-	I2C2 -> CR2 |= I2C_CR2_START;
+	I2C2 -> CR2 = addr | (size << 16) | I2C_CR2_AUTOEND;
 
-	/* Write data (1st byte is written) */
-	for (i = 1; i < size; i++)
+	I2C2 -> CR2 |= I2C_CR2_START;
+	/* Write data */
+	for (i = 0; i < size; i++)
 	{
 		while (!((I2C2 -> ISR) & I2C_ISR_TXIS));
 		I2C2 -> TXDR = data[i];
+		I2C2 -> ISR |= I2C_ISR_TXE;
 	}
 }
 
