@@ -69,7 +69,7 @@ set(GLOBAL_DEFINES
     -DDEVICE_ID=0xCA
     
     #Measurements delay in seconds
-    -DMEASUREMENT_S_DELAY=30
+    -DMEASUREMENT_S_DELAY=10
 )
 
 set(LINKED_LIBS
