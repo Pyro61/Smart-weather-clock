@@ -42,6 +42,7 @@ set(C_SRCS
     hw/external_hw/HD44780/HD44780.c
     hw/external_hw/buttons/buttons.c
     hw/external_hw/rain_sensor/rain_sensor.c
+    hw/external_hw/sht20/sht20.c
 
     #MCU hw files
     hw/mcu_hw/mcu_hw_init.c
