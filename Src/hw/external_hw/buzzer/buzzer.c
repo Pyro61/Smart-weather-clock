@@ -2,8 +2,8 @@
 #include "../../mcu_hw/gpio/gpio.h"
 
 /* Buzzer port defines */
-#define BUZZER_PORT     PORT_B
-#define BUZZER_PIN      7
+#define BUZZER_PORT     PORT_A
+#define BUZZER_PIN      11
 
 
 /* API functions */
