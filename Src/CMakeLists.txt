@@ -56,6 +56,7 @@ set(C_SRCS
     hw/mcu_hw/rtc/rtc.c
     hw/mcu_hw/iwdg/iwdg.c
     hw/mcu_hw/low_power/low_power.c
+    hw/mcu_hw/exceptions/exceptions.c
 )
 
 set(ASM_SRCS
