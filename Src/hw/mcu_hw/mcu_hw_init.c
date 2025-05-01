@@ -1,6 +1,7 @@
 #include "mcu_hw_init.h"
 
 #include "core_clock/core_clock.h"
+#include "iwdg/iwdg.h"
 #include "fpu/fpu.h"
 #include "spi/spi.h"
 #include "tim/tim.h"
@@ -11,6 +12,8 @@
 void mcu_hw_init(void)
 {
     core_clock_config();
+    iwdg_init();
+    iwdg_enable_irq_generator();
     fpu_init();
     spi1_init();
     tim_delay_init();
