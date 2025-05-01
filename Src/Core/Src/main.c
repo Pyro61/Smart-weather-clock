@@ -3,6 +3,7 @@
 #include "../../hw/external_hw/external_hw_init.h"
 #include "../../logic_init.h"
 #include "../../hw/mcu_hw/iwdg/iwdg.h"
+#include "../../hw/mcu_hw/low_power/low_power.h"
 
 
 int main(void)
@@ -17,6 +18,7 @@ int main(void)
     /* Loop forever */
 	while (1)
     {
+        sleep();
         iwdg_feed_counter();
     }
 }

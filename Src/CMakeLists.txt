@@ -55,6 +55,7 @@ set(C_SRCS
     hw/mcu_hw/uart/uart.c
     hw/mcu_hw/rtc/rtc.c
     hw/mcu_hw/iwdg/iwdg.c
+    hw/mcu_hw/low_power/low_power.c
 )
 
 set(ASM_SRCS
