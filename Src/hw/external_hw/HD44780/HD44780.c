@@ -14,10 +14,10 @@
 #define HD44780_RS      PORT_B, 12
 #define HD44780_RW      PORT_B, 11
 #define HD44780_E       PORT_B, 2
-#define HD44780_D4      PORT_A, 10
+#define HD44780_D4      PORT_C, 5 // było pa10
 #define HD44780_D5      PORT_C, 4
-#define HD44780_D6      PORT_A, 15
-#define HD44780_D7      PORT_C, 12
+#define HD44780_D6      PORT_A, 7 //BYŁO PA15
+#define HD44780_D7      PORT_A, 6 //BYŁO PC12 //ZMIANA PINÓW BO NA PCB NIE CHCIAŁO PASOWAĆ, TERAZ SIĘ ZGADZA Z TYM CO NA PCB
 
 /* Control pins enable/disable */
 #define RS_HIGH()       gpio_output_write(HD44780_RS, HIGH)
