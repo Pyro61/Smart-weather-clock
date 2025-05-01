@@ -54,6 +54,7 @@ set(C_SRCS
     hw/mcu_hw/i2c/i2c.c
     hw/mcu_hw/uart/uart.c
     hw/mcu_hw/rtc/rtc.c
+    hw/mcu_hw/iwdg/iwdg.c
 )
 
 set(ASM_SRCS
@@ -66,7 +67,7 @@ set(GLOBAL_DEFINES
     -DSTM32G474xx
 
     #Device id used by application
-    -DDEVICE_ID=0xCA
+    -DDEVICE_ID=0xAA
     
     #Measurements delay in seconds
     -DMEASUREMENT_S_DELAY=10
