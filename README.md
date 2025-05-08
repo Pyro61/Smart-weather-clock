@@ -128,6 +128,4 @@ After system startup and peripheral initialization, the main screen displays:
 1. Clone this repository.
 2. Build the project using CMake
 3. Flash the firmware to STM32G474RE (e.g., Nucleo board).
-4. Connect all peripherals and sensors as shown in the [wiring diagram](pcb/main_board/main_board_schematic.png).
-
-
+4. Connect all sensors and peripherals according to the labeled connectors on the [custom PCB](pcb/main_board/main_board_pcb.png) or according to [wiring diagram](pcb/main_board/main_board_schematic.png).
